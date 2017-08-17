@@ -1,20 +1,17 @@
 const webpack = require('webpack');
 const path = require('path');
+const htmlWebapckPlugin = require('html-webpack-plugin');
 const config = require('./config');
-function resolve(dir) {
-  return path.join(__dirname, '..', dir)
-}
-
 module.exports = {
-  entry:{
-    src:'./app/js/index.js'
+  entry: {
+    src: './app/js/index.js'
   },
   output: {
     path: config.build.assetsRoot,
-    filename: '[name].js',
-    publicPath: process.env.NODE_ENV === 'production'
-      ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath
+    filename: '[name]-[chunkhash].js',
+    publicPath: process.env.NODE_ENV === 'production' ?
+      config.build.assetsPublicPath :
+      config.dev.assetsPublicPath
   },
   devServer: {
     contentBase: "./app",
@@ -25,12 +22,11 @@ module.exports = {
     extensions: ['.js', '.json'],
   },
   module: {
-    rules:[
-      {
+    rules: [{
         test: /\.js$/,
         loader: 'eslint-loader',
         enforce: 'pre',
-        include: [resolve('src'), resolve('test')],
+        include: ['app'],
         options: {
           formatter: require('eslint-friendly-formatter')
         }
@@ -38,8 +34,24 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+        include: ['app']
       },
+      {
+        test: /\.html$/,
+        loader: 'html-loader',
+        include: ['app']
+      }, {
+        test: /\.png$/,
+        loader: 'image-loader',
+        include: ['app/images']
+      }
     ]
-  }
+  },
+  plugins: [
+    new htmlWebapckPlugin({
+      filename: 'index.html',
+      template: 'app/index.html',
+      inject: 'body'
+    })
+  ]
 };

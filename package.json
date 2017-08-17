@@ -22,6 +22,8 @@
     "babel-loader": "^7.1.1",
     "babel-preset-es2015-loose": "^8.0.0",
     "eslint-friendly-formatter": "^3.0.0",
+    "html-webpack-plugin": "^2.30.1",
+    "image-loader": "0.0.1",
     "webpack": "^3.5.4",
     "webpack-merge": "^4.1.0"
   }
