@@ -1,4 +1,7 @@
 import { drawLine, drawImg } from './util';
+import black from '../images/black.png';
+import white from '../images/white.png';
+
 export class BoardMap {
   constructor(row = 15) {
     this.wrapper = document.getElementById('wrapper');
@@ -6,7 +9,6 @@ export class BoardMap {
     this.boardCtx = this.boardCanvas.getContext('2d');
     this.piecesCanvas = document.getElementById('pieces');
     this.piecesCtx = this.piecesCanvas.getContext('2d');
-
     this.row = row;
     this._init();
   }
@@ -14,9 +16,9 @@ export class BoardMap {
   readerPiece(x, y, color) {
     let interval = this.getInterval();
     if (color === 'black') {
-      drawImg(this.piecesCtx, '/images/black.png', (x - 0.45) * interval, (y - 0.45) * interval, interval * 0.9)
+      drawImg(this.piecesCtx, black, (x - 0.45) * interval, (y - 0.45) * interval, interval * 0.9)
     } else {
-      drawImg(this.piecesCtx, '/images/white.png', (x - 0.45) * interval, (y - 0.45) * interval, interval * 0.9)
+      drawImg(this.piecesCtx, white, (x - 0.45) * interval, (y - 0.45) * interval, interval * 0.9)
     }
   }
 

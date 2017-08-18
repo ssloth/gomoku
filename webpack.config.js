@@ -10,8 +10,7 @@ module.exports = {
     path: config.build.assetsRoot,
     filename: '[name]-[chunkhash].js',
     publicPath: process.env.NODE_ENV === 'production' ?
-      config.build.assetsPublicPath :
-      config.dev.assetsPublicPath
+      config.build.assetsPublicPath : config.dev.assetsPublicPath
   },
   devServer: {
     contentBase: "./app",
@@ -33,7 +32,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
+        loaders: ['babel-loader', 'url-loader'],
         include: ['app']
       },
       {
@@ -41,10 +40,17 @@ module.exports = {
         loader: 'html-loader',
         include: ['app']
       }, {
-        test: /\.png$/,
-        loader: 'image-loader',
-        include: ['app/images']
-      }
+        test: /\.(png|jpg)$/,
+        loader: 'url-loader',
+        include: ['app']
+      },
+      {
+        test: /\.(jpg|png|svg)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[path][name].[hash].[ext]',
+        },
+      },
     ]
   },
   plugins: [
