@@ -11,7 +11,7 @@ export class BoardMap {
     this._init();
   }
 
-  readerPieces(x, y, color) {
+  readerPiece(x, y, color) {
     let interval = this.getInterval();
     if (color === 'black') {
       drawImg(this.piecesCtx, '/images/black.png', (x - 0.45) * interval, (y - 0.45) * interval, interval * 0.9)
