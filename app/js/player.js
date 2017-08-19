@@ -11,9 +11,7 @@ export class Player extends EventEmitter {
 
   _initEvent() {
     //落子
-    this.on('moves', (x, y) => {
-      this.pieces.push({ x, y })
-    })
+
   }
 }
 

@@ -1,3 +1,4 @@
 export const model = {
-  'normal': 0
+  'local': 0,
+  'normal': 1,
 }

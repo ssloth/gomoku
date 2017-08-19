@@ -99,15 +99,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__boardMap__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__player__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__game__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__command__ = __webpack_require__(9);
 
 
 
-window.onload = function(){
+
+window.onload = function() {
+  if (!"WebSocket" in window) {
+    alert('你的浏览器不支持websockrt！')
+    return false;
+  }
+  var game = null;
   const socket = new WebSocket('ws:localhost:8080');
-  const game = new __WEBPACK_IMPORTED_MODULE_2__game__["a" /* Game */](new __WEBPACK_IMPORTED_MODULE_1__player__["a" /* Player */]('lzy'),new __WEBPACK_IMPORTED_MODULE_1__player__["a" /* Player */]('xy'),new __WEBPACK_IMPORTED_MODULE_0__boardMap__["a" /* BoardMap */]());
+  socket.onopen = function(event) {
+    var playerName = 'lzy' + Math.random();
+    socket.send(JSON.stringify({ code: 'setPlayerName', playerName: playerName }))
+    socket.onmessage = function(event) {
+      var data = JSON.parse(event.data);
+      var commands = {
+        [__WEBPACK_IMPORTED_MODULE_3__command__["b" /* MSG */]](msg) {
+          console.log(msg)
+        },
+        [__WEBPACK_IMPORTED_MODULE_3__command__["c" /* START */]](players) {
+          game = new __WEBPACK_IMPORTED_MODULE_2__game__["a" /* Game */](new __WEBPACK_IMPORTED_MODULE_1__player__["a" /* Player */](players[0]),new __WEBPACK_IMPORTED_MODULE_1__player__["a" /* Player */](players[1]),new __WEBPACK_IMPORTED_MODULE_0__boardMap__["a" /* BoardMap */]())
+        },
+        [__WEBPACK_IMPORTED_MODULE_3__command__["a" /* BOARD */]](board) {
+          console.log(board)
+        }
+      }
+      commands[data.code](data.data);
+    };
+    socket.onclose = function(event) {
+      console.log('Client notified socket has closed', event.data);
+    };
+  };
 }
-
-
 
 
 /***/ }),
@@ -220,9 +246,7 @@ class Player extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
 
   _initEvent() {
     //落子
-    this.on('moves', (x, y) => {
-      this.pieces.push({ x, y })
-    })
+
   }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Player;
@@ -549,15 +573,20 @@ function isUndefined(arg) {
 
 
 class Game {
-  constructor(playerA, playerB, borderMap) {
+  constructor(playerA, playerB, borderMap, isOnline = false) {
     this.playerA = playerA;
     this.playerB = playerB;
     this.borderMap = borderMap;
+    this.isOnline = isOnline;
     this.currentPlayer = this.playerA;
     this.borderArr = [];
     this.model = 0;
     this._initBorderArr();
     this._initEventer();
+  }
+
+  setGameMode(mode) {
+    this.mode = mode;
   }
 
   _initBorderArr() {
@@ -600,7 +629,6 @@ class Game {
       if (this.borderArr[x][i] !== 0 && this.borderArr[x][i] === this.borderArr[x][i + 1]) {
         count++;
         if (count === 4) {
-          console.log(11)
           return true;
         }
       } else {
@@ -612,7 +640,6 @@ class Game {
       if (this.borderArr[i][y] !== 0 && this.borderArr[i][y] === this.borderArr[i + 1][y]) {
         count++;
         if (count === 4) {
-          console.log(22)
           return true;
         }
       } else {
@@ -624,14 +651,11 @@ class Game {
     var temp = x < y ? x : y;
     for (let i = 0, x1 = x - temp, y1 = y - temp, count = 0; i < this.borderMap.row; i++) {
       if (x1 + i + 1 > this.borderMap.row || y1 + i + 1 > this.borderMap.row) {
-        console.log(x1 + i + 1)
         break;
       }
       if (this.borderArr[x1 + i][y1 + i] !== 0 && this.borderArr[x1 + i][y1 + i] === this.borderArr[x1 + i + 1][y1 + i + 1]) {
         count++;
-        console.log(x1 + i, y1 + i, x1 + i + 1, y1 + i + 1)
         if (count === 4) {
-          console.log(33)
           return true;
         }
       } else {
@@ -648,7 +672,6 @@ class Game {
       if (this.borderArr[x1 + i][y1 - i] !== 0 && this.borderArr[x1 + i][y1 - i] === this.borderArr[x1 + i + 1][y1 - i - 1]) {
         count++;
         if (count === 4) {
-          console.log(44)
           return true;
         }
       } else {
@@ -680,9 +703,26 @@ class Game {
 
 "use strict";
 const model = {
-  'normal': 0
+  'local': 0,
+  'normal': 1,
 }
 /* unused harmony export model */
+
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const MSG = 'msg';
+/* harmony export (immutable) */ __webpack_exports__["b"] = MSG;
+
+const START = 'start';
+/* harmony export (immutable) */ __webpack_exports__["c"] = START;
+
+const BOARD = 'board';
+/* harmony export (immutable) */ __webpack_exports__["a"] = BOARD;
 
 
 

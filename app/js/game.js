@@ -1,15 +1,20 @@
-import { model } from './config';
+import { mode } from './config';
 import { drawImg } from './util';
 export class Game {
-  constructor(playerA, playerB, borderMap) {
+  constructor(playerA, playerB, borderMap, isOnline = false) {
     this.playerA = playerA;
     this.playerB = playerB;
     this.borderMap = borderMap;
+    this.isOnline = isOnline;
     this.currentPlayer = this.playerA;
     this.borderArr = [];
     this.model = 0;
     this._initBorderArr();
     this._initEventer();
+  }
+
+  setGameMode(mode) {
+    this.mode = mode;
   }
 
   _initBorderArr() {
@@ -52,7 +57,6 @@ export class Game {
       if (this.borderArr[x][i] !== 0 && this.borderArr[x][i] === this.borderArr[x][i + 1]) {
         count++;
         if (count === 4) {
-          console.log(11)
           return true;
         }
       } else {
@@ -64,7 +68,6 @@ export class Game {
       if (this.borderArr[i][y] !== 0 && this.borderArr[i][y] === this.borderArr[i + 1][y]) {
         count++;
         if (count === 4) {
-          console.log(22)
           return true;
         }
       } else {
@@ -76,14 +79,11 @@ export class Game {
     var temp = x < y ? x : y;
     for (let i = 0, x1 = x - temp, y1 = y - temp, count = 0; i < this.borderMap.row; i++) {
       if (x1 + i + 1 > this.borderMap.row || y1 + i + 1 > this.borderMap.row) {
-        console.log(x1 + i + 1)
         break;
       }
       if (this.borderArr[x1 + i][y1 + i] !== 0 && this.borderArr[x1 + i][y1 + i] === this.borderArr[x1 + i + 1][y1 + i + 1]) {
         count++;
-        console.log(x1 + i, y1 + i, x1 + i + 1, y1 + i + 1)
         if (count === 4) {
-          console.log(33)
           return true;
         }
       } else {
@@ -100,7 +100,6 @@ export class Game {
       if (this.borderArr[x1 + i][y1 - i] !== 0 && this.borderArr[x1 + i][y1 - i] === this.borderArr[x1 + i + 1][y1 - i - 1]) {
         count++;
         if (count === 4) {
-          console.log(44)
           return true;
         }
       } else {
