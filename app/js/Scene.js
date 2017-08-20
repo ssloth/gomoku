@@ -2,7 +2,7 @@ import { drawLine, drawImg } from './util';
 import black from '../images/black.png';
 import white from '../images/white.png';
 
-export class BoardMap {
+export class Scene {
   constructor(row = 15) {
     this.wrapper = document.getElementById('wrapper');
     this.boardCanvas = document.getElementById('board');

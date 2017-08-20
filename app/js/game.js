@@ -2,15 +2,18 @@ import { EventEmitter } from 'events';
 import { mode } from './config';
 import { drawImg } from './util';
 export class Game extends EventEmitter {
-  constructor(playerA, playerB, borderMap, isOnline = false) {
+  constructor(playerA, playerB, borderMap, setting) {
     super();
     this.playerA = playerA;
     this.playerB = playerB;
     this.borderMap = borderMap;
-    this.isOnline = isOnline;
-    this.currentPlayer = this.playerA;
+    this.localPlayerId = 0;
+    this.currentPlayerId = 0;
     this.borderArr = [];
     this.model = 0;
+
+    this.setting = setting;
+
     this._initBorderArr();
     this._initEventer();
   }

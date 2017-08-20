@@ -1,46 +1,56 @@
-import { BoardMap } from './boardMap';
+import { Scene } from './Scene';
 import { Player } from './player';
 import { Game } from './game';
 import io from 'socket.io-client';
-
-import * as types from './command';
-
-var game = null;
-var playerId = null;
-var currentPlayerId = 0;
-var name = 'lzy' + Math.random();
 const socket = io('http://localhost:8080');
-socket.emit('join', { nickname: name })
+const control = document.getElementById('control');
 
-socket.on('connect', () => {
-  console.log('connect' + socket.id);
-})
+var setting = {
+  isOnlie: false,
+  mode: 0,
+  add: 0,
+}
 
-socket.on('id', (id) => {
-  playerId = id;
-  console.log(id);
-})
+document.querySelector('.ok').onclick = function() {
+  let nickname = document.getElementById('nickname').value;
+  socket.emit({ nickname });
+  socket.on('connect', () => {
+    socket.on('start', (data) => {
+      const game = new Game(new Player(data[0].nickname), new Player(data[1].nickname), new Scene());
 
-socket.on('start', (data) => {
-  game = new Game(new Player(data[0].nickname), new Player(data[1].nickname), new BoardMap());
-  game.on('move', (id, x, y) => {
-    if (playerId !== currentPlayerId) {
-      return console.log('不是你的回合');
-    }
-    socket.emit('playerMove', { currentPlayerId, x, y })
+      socket.on('id', (id) => {
+        game.localPlayerId = id;
+      })
+
+      socket.on('board', (data) => {
+        game.setBoardData(data);
+      })
+
+      socket.on('currentPlayerId', function(id) {
+        game.currentPlayerId = id;
+      })
+
+      game.on('move', (id, x, y) => {
+        if (game.localPlayerId !== game.currentPlayerId) {
+          return console.log('不是你的回合');
+        }
+        socket.emit('playerMove', { currentPlayerId, x, y })
+      })
+
+    })
   })
-})
-socket.on('board', (data) => {
-  console.log(data);
-  game.setBoardData(data);
-})
+  control.style.display = 'none';
+}
 
-socket.on('currentPlayerId', function(id) {
-  currentPlayerId = id;
-  console.log(currentPlayerId);
-})
+document.querySelector('.reset').onclick = function() {
+
+}
 
 
+
+document.querySelector('.close').onclick = function() {
+  control.style.display = 'none';
+}
 
 window.onunload = function() {
   socket.close();
