@@ -1,7 +1,9 @@
+import { EventEmitter } from 'events';
 import { mode } from './config';
 import { drawImg } from './util';
-export class Game {
+export class Game extends EventEmitter {
   constructor(playerA, playerB, borderMap, isOnline = false) {
+    super();
     this.playerA = playerA;
     this.playerB = playerB;
     this.borderMap = borderMap;
@@ -15,6 +17,12 @@ export class Game {
 
   setGameMode(mode) {
     this.mode = mode;
+
+  }
+
+  setBoardData(data) {
+    this.borderArr = data;
+    this.render();
   }
 
   _initBorderArr() {
@@ -32,18 +40,16 @@ export class Game {
       var x = parseInt(e.offsetX / this.borderMap.getInterval() + 0.5);
       var y = parseInt(e.offsetY / this.borderMap.getInterval() + 0.5);
       if (this.borderArr[x][y] === 0) {
-        this.currentPlayer.emit('moves', x, y);
+        this.emit('move', this.currentPlayer.id, x, y);
         this.borderArr[x][y] = this.currentPlayer.id;
-        this.render();
         if (this._checkWin(x, y)) {
           setTimeout(() => { alert(`玩家${this.currentPlayer.name}取得了胜利`) }, 500)
         };
-        this._toggleCurrentPlayer()
       }
     })
   }
 
-  _toggleCurrentPlayer() {
+  toggleCurrentPlayer() {
     this.currentPlayer = this.currentPlayer === this.playerA ? this.playerB : this.playerA;
   }
 

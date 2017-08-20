@@ -1,4 +1,4 @@
-class GameData {
+class Board {
   constructor() {
     this.board = [];
     this._initBoard();
@@ -13,10 +13,11 @@ class GameData {
     }
   }
 
-  move(x, y, id) {
+  move(id, x, y) {
+    console.log(id);
     this.board[x][y] = id;
   }
 
 }
 
-module.exports = GameData;
+module.exports = Board;

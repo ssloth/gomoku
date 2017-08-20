@@ -6,10 +6,9 @@
 ## 如何使用
 ```
 git clone https://github.com/SSnewbie/gomoku.git
-
 npm install
-
-npm run dev
+npm run bulid
+npm run server
 ```
 
 ## 技术
@@ -33,7 +32,7 @@ npm run dev
 - [X] 棋盘
 - [X] 可以轮换落子
 - [X] 胜负判断
-- [ ] 联机
+- [X] 联机
 ### AI
 - [ ] 实现A
 I
