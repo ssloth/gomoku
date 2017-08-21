@@ -16,3 +16,7 @@ export function drawImg(context, imgUrl, x, y, size) {
     context.closePath();
   }
 }
+
+export function tip() {
+
+}

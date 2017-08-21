@@ -14,6 +14,7 @@
     * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
     #wrapper {
@@ -25,7 +26,97 @@
       width: 650px;
       mix-width: 100%;
       height: 650px;
-      border:1px solid #CACBCC;
+      border: 1px solid #CACBCC;
+    }
+
+    #tip {
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translate3d(-50%, -50%, 0);
+      padding: 3px 10px;
+      background: rgba(2, 4, 6, 0.5);
+      color: #FFF;
+      box-shadow: 0 0 1px rgba(2, 3, 4, 0.9);
+      font-size: 15px;
+    }
+
+    #control {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate3d(-50%, -75%, 0);
+      border: 1px solid #CACBCC;
+      width: 450px;
+      mix-width: 75%;
+      min-height: 100px;
+      box-shadow: 0 0 5px #AABBCC;
+    }
+
+    #control .header {
+      position: relative;
+      height: 30px;
+      line-height: 30px;
+      background: #000;
+      color: #FFF;
+    }
+
+    .header .close {
+      position: absolute;
+      top: 0;
+      right: 10px;
+      padding-right: 10px;
+      cursor: pointer;
+    }
+
+    .header .title {
+      text-align: center;
+    }
+
+    #control .main {
+      padding: 25px 10px;
+      color: #000;
+    }
+
+    .row {
+      width: 100%;
+      padding: 5px 10%;
+      font-size: 0;
+    }
+
+    .row .label {
+      display: inline-block;
+      vertical-align: top;
+      width: 20%;
+      padding-right: 25px;
+      font-size: 15px;
+      text-align: right;
+    }
+
+    .row .setting {
+      display: inline-block;
+      vertical-align: top;
+      width: 80%;
+      font-size: 15px;
+    }
+
+    #control .footer {
+      padding: 20px 10px;
+      display: flex;
+    }
+
+    .footer div {
+      flex: 1;
+      width: 50px;
+      margin: 0 10%;
+      text-align: center;
+      border: 1px solid #BFBEBC;
+      cursor: pointer;
+    }
+
+    .footer div:hover {
+      background: #000;
+      color: #FFF;
     }
 
     canvas {
@@ -35,7 +126,7 @@
       transform: translate3d(-50%, -50%, 0);
     }
 
-    .piece{
+    .piece {
       display: none;
     }
   </style>
@@ -46,6 +137,44 @@
     <canvas id="board"></canvas>
     <canvas id="pieces"></canvas>
   </div>
-<script type="text/javascript" src="/src-86688fb899805782aae5.js"></script></body>
+
+  <div id="control">
+    <div class="header">
+      <div class="title">游戏设置</div>
+      <div class="close">关闭</div>
+    </div>
+    <div class="main">
+      <div class="row">
+        <label class="label">昵称</label>
+        <input required id="nickname" class="setting">
+      </div>
+      <div class="row">
+        <label class="label">模式</label>
+        <select class="setting" name="" id="mode">
+            <option value="0">单机</option>
+            <option value="1">联机</option>
+            <option value="2">观战</option>
+            <option value="3">自由</option>
+          </select>
+      </div>
+      <div class="row">
+        <label class="label">追加</label>
+        <select class="setting" name="" id="add">
+              <option value="0">普通模式</option>
+              <option value="1">视野盲区</option>
+              <option value="2">互换视野</option>
+              <option value="3">视野暂留</option>
+              <option value="4">记忆大师</option>
+            </select>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="ok">确定</div>
+      <div class="reset">重置</div>
+    </div>
+  </div>
+
+  <span id="tip">提示</span>
+<script type="text/javascript" src="/src-203faf97f43ad9d581fa.js"></script></body>
 
 </html>

@@ -37,7 +37,7 @@
       padding: 3px 10px;
       background: rgba(2, 4, 6, 0.5);
       color: #FFF;
-      box-shadow: 0 0 3px rgba(7, 17, 27, 0.9);
+      box-shadow: 0 0 1px rgba(2, 3, 4, 0.9);
       font-size: 15px;
     }
 
@@ -146,24 +146,25 @@
     <div class="main">
       <div class="row">
         <label class="label">昵称</label>
-        <input id="nickname" class="setting">
+        <input required id="nickname" class="setting">
       </div>
       <div class="row">
         <label class="label">模式</label>
         <select class="setting" name="" id="mode">
-            <option value="">单机</option>
-            <option value="">联机</option>
-            <option value="">观战</option>
+            <option value="0">单机</option>
+            <option value="1">联机</option>
+            <option value="2">观战</option>
+            <option value="3">自由</option>
           </select>
       </div>
       <div class="row">
         <label class="label">追加</label>
         <select class="setting" name="" id="add">
-              <option value="">普通模式</option>
-              <option value="">视野盲区</option>
-              <option value="">互换视野</option>
-              <option value="">视野暂留</option>
-              <option value="">记忆大师</option>
+              <option value="0">普通模式</option>
+              <option value="1">视野盲区</option>
+              <option value="2">互换视野</option>
+              <option value="3">视野暂留</option>
+              <option value="4">记忆大师</option>
             </select>
       </div>
     </div>

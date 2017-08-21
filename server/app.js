@@ -8,6 +8,9 @@ const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server);
 
+const log = console.log.bind(console);
+const PORT = 8088;
+
 var players = [];
 var playerCount = 0;
 var currentPlayerId = 0;
@@ -22,41 +25,43 @@ app.get('/', function(req, res) {
 
 
 io.on('connection', function(client) {
-  console.log('a client connect');
+  log('a client connect');
+  client.on('join', function(nickname) {
+    addPlayer(nickname, function() {
+      client.emit('localPlayer', players.find(p => p.nickname === nickname));
+      log(`player [${nickname}] join,current player : ${playerCount}`);
+    });
 
-  client.on('join', function(data) {
-    players.push({ nickname: data.nickname, id: ++playerCount })
-    client.emit('id', playerCount);
-    console.log('a player join,current player : ' + playerCount);
     if (playerCount === 2) {
-      console.log('--- game start ---');
+      log('--- game start ---');
       io.sockets.emit('start', players);
       currentPlayerId = 1;
       io.sockets.emit('currentPlayerId', currentPlayerId);
 
     }
   })
-  client.on('playerMove', function(data) {
-    console.log(data)
-    board.move(data.currentPlayerId, data.x, data.y);
-    io.sockets.emit('board', board.board);
+  client.on('move', function({ x, y }) {
+    board.move(x, y);
+    log(currentPlayerId, 4422)
+    io.sockets.emit('move', { currentPlayerId, x, y });
     toggleCurrentPlayerId();
     io.sockets.emit('currentPlayerId', currentPlayerId);
   })
 
-  client.on('disconnect', function() {
+  client.on('colse', function(nickname) {
     if (playerCount === 0) { return };
-    console.log('a player leave, current player :' + --playerCount);
-    players.pop()
+    delPlayer(nickname, function() {
+      log(`player [${nickname}] leave, current player : ${playerCount}`);
+    })
   })
 });
 
 io.on('close', function() {
-  console.log('connenction has colsed');
+  log('connenction has colsed');
 })
 
-server.listen(8080, function() {
-  console.log('Listening on %d', server.address().port);
+server.listen(PORT, function() {
+  log('Listening on %d', server.address().port);
 });
 
 
@@ -65,4 +70,27 @@ function toggleCurrentPlayerId() {
     return;
   }
   currentPlayerId = currentPlayerId === 1 ? 2 : 1;
+}
+
+function addPlayer(nickname, cb) {
+  if (playerCount >= 2) { return }
+  let id = players.find(player => player.id === 1) ? 2 : 1;
+  players.push({ nickname, id })
+  playerCount = players.length;
+  if (typeof cb === 'function') {
+    cb();
+  }
+}
+
+function delPlayer(nickname, cb) {
+  players.forEach((player, index) => {
+    if (player.nickname === nickname) {
+      players.splice(index, 1);
+    }
+  })
+  playerCount = players.length;
+  if (typeof cb === 'function') {
+    cb();
+  }
+
 }
