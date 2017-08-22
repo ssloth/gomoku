@@ -72,8 +72,8 @@ export class Game extends EventEmitter {
   }
 
   _initFree() {
-    this.on('move', function(id, x, y) {
-      this._updataBoard({ id, x, y });
+    this.on('move', function(currentPlayerId, x, y) {
+      this._updataBoard({ currentPlayerId, x, y });
       this._toggleCurrentPlayerId();
     })
   }
