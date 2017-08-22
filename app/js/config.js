@@ -4,4 +4,8 @@ export const mode = {
   Observer: 2
 }
 
+export const WIN_MODE = {
+
+}
+
 export const POTR = 8088;

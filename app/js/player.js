@@ -1,6 +1,7 @@
-export class Player  {
-  constructor(nickname) {
+export class Player {
+  constructor({ nickname, id }) {
     this.nickname = nickname;
-    this.id = null;
+    this.id = id;
   }
+
 }

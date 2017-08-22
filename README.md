@@ -26,7 +26,7 @@ npm run server
 
 ### 进度
 可以判断胜负了..
-![](p/win.png)
+![](doc/win.png)
 ## TODO
 ### 基本功能
 - [X] 棋盘

@@ -2,6 +2,8 @@ import { EventEmitter } from 'events';
 import { mode } from './config';
 import { drawImg } from './util';
 import { Online } from './online';
+import { AI } from './ai';
+import { Player } from './player';
 export class Game extends EventEmitter {
   constructor({ nickname, sence, setting }) {
     super();
@@ -19,21 +21,27 @@ export class Game extends EventEmitter {
     this._initBorderArr();
     this.currentPlayerId = 1;
     if (this.setting.mode === mode.personal) {
+
       this._initPersonal();
     } else if (this.setting.mode === mode.online) {
       this._initOnline();
     } else if (this.setting.mode === mode.observer) {
       this._initObserver();
     } else {
-      this.addPlayer({ nickname: '黑', id: 1 });
-      this.addPlayer({ nickname: '白', id: 2 });
       this._initFree();
     }
   }
 
 
   _initPersonal() {
+    this.addPlayer(new Player({ nickname: '黑', id: 1 }));
+    this.addPlayer(new AI({ nickname: '白', id: 2 }));
 
+    this.on('move', function(currentPlayerId, x, y) {
+      this._updataBoard({ currentPlayerId, x, y });
+      this.players[1].move(this.borderArr);
+      this._toggleCurrentPlayerId();
+    })
   }
 
   _initOnline() {
@@ -54,7 +62,6 @@ export class Game extends EventEmitter {
     });
 
     me.online.socket.on('move', function({ currentPlayerId, x, y }) {
-      console.log(currentPlayerId, x, y);
       me._updataBoard({ currentPlayerId, x, y });
     })
 
@@ -72,6 +79,8 @@ export class Game extends EventEmitter {
   }
 
   _initFree() {
+    this.addPlayer(new Player({ nickname: '黑', id: 1 }));
+    this.addPlayer(new Player({ nickname: '白', id: 2 }));
     this.on('move', function(currentPlayerId, x, y) {
       this._updataBoard({ currentPlayerId, x, y });
       this._toggleCurrentPlayerId();
