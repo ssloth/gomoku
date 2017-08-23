@@ -26,8 +26,8 @@ export const directionFn = {
   ['R'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 1, v: 0 }), h: 1, v: 0 } },
   ['U'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 0, v: -1 }), h: 0, v: -1 } },
   ['B'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 0, v: 1 }), h: 0, v: 1 } },
-  ['LU'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: -1, v: 1 }), h: -1, v: -1 } },
-  ['LB'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: -1, v: -1 }), h: -1, v: 1 } },
+  ['LU'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: -1, v: -1 }), h: -1, v: -1 } },
+  ['LB'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: -1, v: 1 }), h: -1, v: 1 } },
   ['RU'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 1, v: -1 }), h: 1, v: -1 } },
   ['RB'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 1, v: 1 }), h: 1, v: 1 } }
 }

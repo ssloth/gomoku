@@ -25,8 +25,8 @@ npm run server
 然后我又删了目录，1个小时过去了
 
 ### 进度
-可以判断胜负了..
-![](doc/win.png)
+AI
+![](doc/dome.gif)
 ## TODO
 ### 基本功能
 - [X] 棋盘
