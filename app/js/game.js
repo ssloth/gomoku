@@ -34,13 +34,19 @@ export class Game extends EventEmitter {
 
 
   _initPersonal() {
-    this.addPlayer(new Player({ nickname: '黑', id: 1 }));
-    this.addPlayer(new AI({ nickname: '白', id: 2 }));
+    let me = this;
+    me.addPlayer(new Player({ nickname: '黑', id: 1 }));
+    me.addPlayer(new AI({ nickname: '白', id: 2 }));
 
-    this.on('move', function(currentPlayerId, x, y) {
-      this._updataBoard({ currentPlayerId, x, y });
-      this.players[1].move(this.borderArr);
-      this._toggleCurrentPlayerId();
+    me.players[1].on('move', function(currentPlayerId, x, y) {
+      me._updataBoard({ currentPlayerId, x, y });
+      me._toggleCurrentPlayerId();
+    })
+
+    me.on('move', function(currentPlayerId, x, y) {
+      me._updataBoard({ currentPlayerId, x, y });
+      me._toggleCurrentPlayerId();
+      me.players[1].move(this.borderArr);
     })
   }
 
@@ -134,7 +140,7 @@ export class Game extends EventEmitter {
 
   _checkWin(x, y) {
     // 横向检查
-    for (let i = 0, count = 0; i < this.sence.row; i++) {
+    for (let i = 0, count = 0; i < this.sence.row - 1; i++) {
       if (this.borderArr[x][i] !== 0 && this.borderArr[x][i] === this.borderArr[x][i + 1]) {
         count++;
         if (count === 4) {
@@ -145,7 +151,7 @@ export class Game extends EventEmitter {
       }
     }
     //纵向检查
-    for (let i = 0, count = 0; i < this.sence.row; i++) {
+    for (let i = 0, count = 0; i < this.sence.row - 1; i++) {
       if (this.borderArr[i][y] !== 0 && this.borderArr[i][y] === this.borderArr[i + 1][y]) {
         count++;
         if (count === 4) {
@@ -159,7 +165,7 @@ export class Game extends EventEmitter {
     // 斜\检查
     var temp = x < y ? x : y;
     for (let i = 0, x1 = x - temp, y1 = y - temp, count = 0; i < this.sence.row; i++) {
-      if (x1 + i + 1 > this.sence.row || y1 + i + 1 > this.sence.row) {
+      if (x1 + i + 1 > this.sence.row - 1 || y1 + i + 1 > this.sence.row - 1) {
         break;
       }
       if (this.borderArr[x1 + i][y1 + i] !== 0 && this.borderArr[x1 + i][y1 + i] === this.borderArr[x1 + i + 1][y1 + i + 1]) {
@@ -175,7 +181,7 @@ export class Game extends EventEmitter {
     // 斜/检查
     var temp = x < this.sence.row - y ? x : this.sence.row - y;
     for (let i = 0, x1 = x - temp, y1 = y + temp, count = 0; i < this.sence.row; i++) {
-      if (x1 + i + 1 > this.sence.row || y1 - i - 1 < 0) {
+      if (x1 + i + 1 > this.sence.row - 1 || y1 - i - 1 < 0) {
         break;
       }
       if (this.borderArr[x1 + i][y1 - i] !== 0 && this.borderArr[x1 + i][y1 - i] === this.borderArr[x1 + i + 1][y1 - i - 1]) {
