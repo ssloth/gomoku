@@ -1,0 +1,37 @@
+{
+  "name": "gomoku",
+  "version": "1.0.0",
+  "description": "五子棋联机版",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack-dev-server",
+    "server":"node server/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SSnewbie/gomoku.git"
+  },
+  "author": "SSnewbie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SSnewbie/gomoku/issues"
+  },
+  "homepage": "https://github.com/SSnewbie/gomoku#readme",
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-es2015-loose": "^8.0.0",
+    "eslint-friendly-formatter": "^3.0.0",
+    "file-loader": "^0.11.2",
+    "html-webpack-plugin": "^2.30.1",
+    "image-loader": "0.0.1",
+    "url-loader": "^0.5.9",
+    "webpack": "^3.5.4",
+    "webpack-merge": "^4.1.0"
+  },
+  "dependencies": {
+    "express": "^4.15.4",
+    "socket.io": "^2.0.3"
+  }
+}
