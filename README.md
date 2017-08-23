@@ -9,6 +9,8 @@ git clone https://github.com/SSnewbie/gomoku.git
 npm install
 npm run bulid
 npm run server
+
+// 单机版不需要安装,打开server目录下的public运行index.html可以运行单机模式和自由模式
 ```
 
 ## 技术

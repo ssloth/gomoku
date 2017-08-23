@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 23);
+/******/ 	return __webpack_require__(__webpack_require__.s = 24);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -460,7 +460,7 @@ Emitter.prototype.hasListeners = function(event){
  */
 
 var keys = __webpack_require__(43);
-var hasBinary = __webpack_require__(13);
+var hasBinary = __webpack_require__(14);
 var sliceBuffer = __webpack_require__(44);
 var after = __webpack_require__(45);
 var utf8 = __webpack_require__(46);
@@ -1121,6 +1121,477 @@ module.exports = function(a, b){
 
 /***/ }),
 /* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["c"] = drawLine;
+/* harmony export (immutable) */ __webpack_exports__["b"] = drawImg;
+/* unused harmony export tip */
+/* harmony export (immutable) */ __webpack_exports__["d"] = to;
+function drawLine(context, x1, y1, x2, y2, color = '#989796') {
+  context.strokeStyle = color;
+  context.beginPath();
+  context.moveTo(x1, y1);
+  context.lineTo(x2, y2);
+  context.stroke();
+  context.closePath();
+}
+
+function drawImg(context, imgUrl, x, y, size) {
+  let image = new Image()
+  image.src = imgUrl;
+  image.onload = function() {
+    context.beginPath();
+    context.drawImage(image, x, y, size, size);
+    context.closePath();
+  }
+}
+
+function tip() {
+
+}
+
+const directionFn = {
+  ['L'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: -1, v: 0 }), h: -1, v: 0 } },
+  ['R'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 1, v: 0 }), h: 1, v: 0 } },
+  ['U'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 0, v: -1 }), h: 0, v: -1 } },
+  ['B'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 0, v: 1 }), h: 0, v: 1 } },
+  ['LU'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: -1, v: -1 }), h: -1, v: -1 } },
+  ['LB'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: -1, v: 1 }), h: -1, v: 1 } },
+  ['RU'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 1, v: -1 }), h: 1, v: -1 } },
+  ['RB'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 1, v: 1 }), h: 1, v: 1 } }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = directionFn;
+
+
+function to(board, i, j, id, { h, v }) {
+  function _to(i, j, id, count) {
+    if (j === 0 || i === 0 || i === 14 || j === 14) { return count; }
+    if (board[i - h][j - v] === 0) {
+      return count;
+    }
+    if (board[i - h][j - v] !== id) {
+      return -count;
+    }
+    return _to(i - h, j - v, id, count + 1);
+  }
+  return _to(i, j, id, 1);
+}
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_events__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_events___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_events__);
+
+
+class Player extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"]{
+  constructor({ nickname, id }) {
+    super();
+    this.nickname = nickname;
+    this.id = id;
+  }
+
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = Player;
+
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+function EventEmitter() {
+  this._events = this._events || {};
+  this._maxListeners = this._maxListeners || undefined;
+}
+module.exports = EventEmitter;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+EventEmitter.defaultMaxListeners = 10;
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function(n) {
+  if (!isNumber(n) || n < 0 || isNaN(n))
+    throw TypeError('n must be a positive number');
+  this._maxListeners = n;
+  return this;
+};
+
+EventEmitter.prototype.emit = function(type) {
+  var er, handler, len, args, i, listeners;
+
+  if (!this._events)
+    this._events = {};
+
+  // If there is no 'error' event listener then throw.
+  if (type === 'error') {
+    if (!this._events.error ||
+        (isObject(this._events.error) && !this._events.error.length)) {
+      er = arguments[1];
+      if (er instanceof Error) {
+        throw er; // Unhandled 'error' event
+      } else {
+        // At least give some kind of context to the user
+        var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
+        err.context = er;
+        throw err;
+      }
+    }
+  }
+
+  handler = this._events[type];
+
+  if (isUndefined(handler))
+    return false;
+
+  if (isFunction(handler)) {
+    switch (arguments.length) {
+      // fast cases
+      case 1:
+        handler.call(this);
+        break;
+      case 2:
+        handler.call(this, arguments[1]);
+        break;
+      case 3:
+        handler.call(this, arguments[1], arguments[2]);
+        break;
+      // slower
+      default:
+        args = Array.prototype.slice.call(arguments, 1);
+        handler.apply(this, args);
+    }
+  } else if (isObject(handler)) {
+    args = Array.prototype.slice.call(arguments, 1);
+    listeners = handler.slice();
+    len = listeners.length;
+    for (i = 0; i < len; i++)
+      listeners[i].apply(this, args);
+  }
+
+  return true;
+};
+
+EventEmitter.prototype.addListener = function(type, listener) {
+  var m;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events)
+    this._events = {};
+
+  // To avoid recursion in the case that type === "newListener"! Before
+  // adding it to the listeners, first emit "newListener".
+  if (this._events.newListener)
+    this.emit('newListener', type,
+              isFunction(listener.listener) ?
+              listener.listener : listener);
+
+  if (!this._events[type])
+    // Optimize the case of one listener. Don't need the extra array object.
+    this._events[type] = listener;
+  else if (isObject(this._events[type]))
+    // If we've already got an array, just append.
+    this._events[type].push(listener);
+  else
+    // Adding the second element, need to change to array.
+    this._events[type] = [this._events[type], listener];
+
+  // Check for listener leak
+  if (isObject(this._events[type]) && !this._events[type].warned) {
+    if (!isUndefined(this._maxListeners)) {
+      m = this._maxListeners;
+    } else {
+      m = EventEmitter.defaultMaxListeners;
+    }
+
+    if (m && m > 0 && this._events[type].length > m) {
+      this._events[type].warned = true;
+      console.error('(node) warning: possible EventEmitter memory ' +
+                    'leak detected. %d listeners added. ' +
+                    'Use emitter.setMaxListeners() to increase limit.',
+                    this._events[type].length);
+      if (typeof console.trace === 'function') {
+        // not supported in IE 10
+        console.trace();
+      }
+    }
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.once = function(type, listener) {
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  var fired = false;
+
+  function g() {
+    this.removeListener(type, g);
+
+    if (!fired) {
+      fired = true;
+      listener.apply(this, arguments);
+    }
+  }
+
+  g.listener = listener;
+  this.on(type, g);
+
+  return this;
+};
+
+// emits a 'removeListener' event iff the listener was removed
+EventEmitter.prototype.removeListener = function(type, listener) {
+  var list, position, length, i;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events || !this._events[type])
+    return this;
+
+  list = this._events[type];
+  length = list.length;
+  position = -1;
+
+  if (list === listener ||
+      (isFunction(list.listener) && list.listener === listener)) {
+    delete this._events[type];
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+
+  } else if (isObject(list)) {
+    for (i = length; i-- > 0;) {
+      if (list[i] === listener ||
+          (list[i].listener && list[i].listener === listener)) {
+        position = i;
+        break;
+      }
+    }
+
+    if (position < 0)
+      return this;
+
+    if (list.length === 1) {
+      list.length = 0;
+      delete this._events[type];
+    } else {
+      list.splice(position, 1);
+    }
+
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.removeAllListeners = function(type) {
+  var key, listeners;
+
+  if (!this._events)
+    return this;
+
+  // not listening for removeListener, no need to emit
+  if (!this._events.removeListener) {
+    if (arguments.length === 0)
+      this._events = {};
+    else if (this._events[type])
+      delete this._events[type];
+    return this;
+  }
+
+  // emit removeListener for all listeners on all events
+  if (arguments.length === 0) {
+    for (key in this._events) {
+      if (key === 'removeListener') continue;
+      this.removeAllListeners(key);
+    }
+    this.removeAllListeners('removeListener');
+    this._events = {};
+    return this;
+  }
+
+  listeners = this._events[type];
+
+  if (isFunction(listeners)) {
+    this.removeListener(type, listeners);
+  } else if (listeners) {
+    // LIFO order
+    while (listeners.length)
+      this.removeListener(type, listeners[listeners.length - 1]);
+  }
+  delete this._events[type];
+
+  return this;
+};
+
+EventEmitter.prototype.listeners = function(type) {
+  var ret;
+  if (!this._events || !this._events[type])
+    ret = [];
+  else if (isFunction(this._events[type]))
+    ret = [this._events[type]];
+  else
+    ret = this._events[type].slice();
+  return ret;
+};
+
+EventEmitter.prototype.listenerCount = function(type) {
+  if (this._events) {
+    var evlistener = this._events[type];
+
+    if (isFunction(evlistener))
+      return 1;
+    else if (evlistener)
+      return evlistener.length;
+  }
+  return 0;
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  return emitter.listenerCount(type);
+};
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const mode = {
+  personal: 0,
+  online: 1,
+  Observer: 2
+}
+/* harmony export (immutable) */ __webpack_exports__["b"] = mode;
+
+
+const modeScore = {
+  rd1: 0,
+  rl1: 50,
+  rd2: 150,
+  rl2: 200,
+  rd3: 250,
+  rl3: 300,
+  rd4: 350,
+  rl4: 400,
+  rl5: 500,
+  md1: 10,
+  ml1: 60,
+  md2: 160,
+  ml2: 210,
+  md3: 260,
+  ml3: 310,
+  md4: 360,
+  md4: 410,
+  ml5: 500
+}
+/* harmony export (immutable) */ __webpack_exports__["d"] = modeScore;
+
+
+const modeMapR = {
+  '-1': 'rd1',
+  '1': 'rl1',
+  '-2': 'rd2',
+  '2': 'rl2',
+  '-3': 'rd3',
+  '3': 'rl3',
+  '-4': 'rd4',
+  '4': 'rl4',
+  '5': 'rl5'
+}
+/* unused harmony export modeMapR */
+
+
+const modeMapM = {
+  '-1': 'md1',
+  '1': 'ml1',
+  '-2': 'md2',
+  '2': 'ml2',
+  '-3': 'md3',
+  '3': 'ml3',
+  '-4': 'md4',
+  '4':' ml4',
+  '5': 'ml5'
+}
+/* harmony export (immutable) */ __webpack_exports__["c"] = modeMapM;
+
+
+const direction = {
+  ['L']() {},
+  ['R']() {},
+  ['U']() {},
+  ['B']() {},
+  ['LU']() {},
+  ['LB']() {},
+  ['RU']() {},
+  ['RB']() {},
+}
+/* unused harmony export direction */
+
+
+const POTR = 8088;
+/* harmony export (immutable) */ __webpack_exports__["a"] = POTR;
+
+
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -1130,9 +1601,9 @@ module.exports = function(a, b){
 
 var debug = __webpack_require__(1)('socket.io-parser');
 var Emitter = __webpack_require__(2);
-var hasBin = __webpack_require__(13);
+var hasBin = __webpack_require__(14);
 var binary = __webpack_require__(36);
-var isBuf = __webpack_require__(14);
+var isBuf = __webpack_require__(15);
 
 /**
  * Protocol version.
@@ -1526,7 +1997,7 @@ function error() {
 
 
 /***/ }),
-/* 7 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {// browser shim for xmlhttprequest module
@@ -1570,7 +2041,7 @@ module.exports = function (opts) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 8 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -1733,365 +2204,7 @@ Transport.prototype.onClose = function () {
 
 
 /***/ }),
-/* 9 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["b"] = drawLine;
-/* harmony export (immutable) */ __webpack_exports__["a"] = drawImg;
-/* unused harmony export tip */
-function drawLine(context, x1, y1, x2, y2, color = '#989796') {
-  context.strokeStyle = color;
-  context.beginPath();
-  context.moveTo(x1, y1);
-  context.lineTo(x2, y2);
-  context.stroke();
-  context.closePath();
-}
-
-function drawImg(context, imgUrl, x, y, size) {
-  let image = new Image()
-  image.src = imgUrl;
-  image.onload = function() {
-    context.beginPath();
-    context.drawImage(image, x, y, size, size);
-    context.closePath();
-  }
-}
-
-function tip() {
-
-}
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports) {
-
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-function EventEmitter() {
-  this._events = this._events || {};
-  this._maxListeners = this._maxListeners || undefined;
-}
-module.exports = EventEmitter;
-
-// Backwards-compat with node 0.10.x
-EventEmitter.EventEmitter = EventEmitter;
-
-EventEmitter.prototype._events = undefined;
-EventEmitter.prototype._maxListeners = undefined;
-
-// By default EventEmitters will print a warning if more than 10 listeners are
-// added to it. This is a useful default which helps finding memory leaks.
-EventEmitter.defaultMaxListeners = 10;
-
-// Obviously not all Emitters should be limited to 10. This function allows
-// that to be increased. Set to zero for unlimited.
-EventEmitter.prototype.setMaxListeners = function(n) {
-  if (!isNumber(n) || n < 0 || isNaN(n))
-    throw TypeError('n must be a positive number');
-  this._maxListeners = n;
-  return this;
-};
-
-EventEmitter.prototype.emit = function(type) {
-  var er, handler, len, args, i, listeners;
-
-  if (!this._events)
-    this._events = {};
-
-  // If there is no 'error' event listener then throw.
-  if (type === 'error') {
-    if (!this._events.error ||
-        (isObject(this._events.error) && !this._events.error.length)) {
-      er = arguments[1];
-      if (er instanceof Error) {
-        throw er; // Unhandled 'error' event
-      } else {
-        // At least give some kind of context to the user
-        var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
-        err.context = er;
-        throw err;
-      }
-    }
-  }
-
-  handler = this._events[type];
-
-  if (isUndefined(handler))
-    return false;
-
-  if (isFunction(handler)) {
-    switch (arguments.length) {
-      // fast cases
-      case 1:
-        handler.call(this);
-        break;
-      case 2:
-        handler.call(this, arguments[1]);
-        break;
-      case 3:
-        handler.call(this, arguments[1], arguments[2]);
-        break;
-      // slower
-      default:
-        args = Array.prototype.slice.call(arguments, 1);
-        handler.apply(this, args);
-    }
-  } else if (isObject(handler)) {
-    args = Array.prototype.slice.call(arguments, 1);
-    listeners = handler.slice();
-    len = listeners.length;
-    for (i = 0; i < len; i++)
-      listeners[i].apply(this, args);
-  }
-
-  return true;
-};
-
-EventEmitter.prototype.addListener = function(type, listener) {
-  var m;
-
-  if (!isFunction(listener))
-    throw TypeError('listener must be a function');
-
-  if (!this._events)
-    this._events = {};
-
-  // To avoid recursion in the case that type === "newListener"! Before
-  // adding it to the listeners, first emit "newListener".
-  if (this._events.newListener)
-    this.emit('newListener', type,
-              isFunction(listener.listener) ?
-              listener.listener : listener);
-
-  if (!this._events[type])
-    // Optimize the case of one listener. Don't need the extra array object.
-    this._events[type] = listener;
-  else if (isObject(this._events[type]))
-    // If we've already got an array, just append.
-    this._events[type].push(listener);
-  else
-    // Adding the second element, need to change to array.
-    this._events[type] = [this._events[type], listener];
-
-  // Check for listener leak
-  if (isObject(this._events[type]) && !this._events[type].warned) {
-    if (!isUndefined(this._maxListeners)) {
-      m = this._maxListeners;
-    } else {
-      m = EventEmitter.defaultMaxListeners;
-    }
-
-    if (m && m > 0 && this._events[type].length > m) {
-      this._events[type].warned = true;
-      console.error('(node) warning: possible EventEmitter memory ' +
-                    'leak detected. %d listeners added. ' +
-                    'Use emitter.setMaxListeners() to increase limit.',
-                    this._events[type].length);
-      if (typeof console.trace === 'function') {
-        // not supported in IE 10
-        console.trace();
-      }
-    }
-  }
-
-  return this;
-};
-
-EventEmitter.prototype.on = EventEmitter.prototype.addListener;
-
-EventEmitter.prototype.once = function(type, listener) {
-  if (!isFunction(listener))
-    throw TypeError('listener must be a function');
-
-  var fired = false;
-
-  function g() {
-    this.removeListener(type, g);
-
-    if (!fired) {
-      fired = true;
-      listener.apply(this, arguments);
-    }
-  }
-
-  g.listener = listener;
-  this.on(type, g);
-
-  return this;
-};
-
-// emits a 'removeListener' event iff the listener was removed
-EventEmitter.prototype.removeListener = function(type, listener) {
-  var list, position, length, i;
-
-  if (!isFunction(listener))
-    throw TypeError('listener must be a function');
-
-  if (!this._events || !this._events[type])
-    return this;
-
-  list = this._events[type];
-  length = list.length;
-  position = -1;
-
-  if (list === listener ||
-      (isFunction(list.listener) && list.listener === listener)) {
-    delete this._events[type];
-    if (this._events.removeListener)
-      this.emit('removeListener', type, listener);
-
-  } else if (isObject(list)) {
-    for (i = length; i-- > 0;) {
-      if (list[i] === listener ||
-          (list[i].listener && list[i].listener === listener)) {
-        position = i;
-        break;
-      }
-    }
-
-    if (position < 0)
-      return this;
-
-    if (list.length === 1) {
-      list.length = 0;
-      delete this._events[type];
-    } else {
-      list.splice(position, 1);
-    }
-
-    if (this._events.removeListener)
-      this.emit('removeListener', type, listener);
-  }
-
-  return this;
-};
-
-EventEmitter.prototype.removeAllListeners = function(type) {
-  var key, listeners;
-
-  if (!this._events)
-    return this;
-
-  // not listening for removeListener, no need to emit
-  if (!this._events.removeListener) {
-    if (arguments.length === 0)
-      this._events = {};
-    else if (this._events[type])
-      delete this._events[type];
-    return this;
-  }
-
-  // emit removeListener for all listeners on all events
-  if (arguments.length === 0) {
-    for (key in this._events) {
-      if (key === 'removeListener') continue;
-      this.removeAllListeners(key);
-    }
-    this.removeAllListeners('removeListener');
-    this._events = {};
-    return this;
-  }
-
-  listeners = this._events[type];
-
-  if (isFunction(listeners)) {
-    this.removeListener(type, listeners);
-  } else if (listeners) {
-    // LIFO order
-    while (listeners.length)
-      this.removeListener(type, listeners[listeners.length - 1]);
-  }
-  delete this._events[type];
-
-  return this;
-};
-
-EventEmitter.prototype.listeners = function(type) {
-  var ret;
-  if (!this._events || !this._events[type])
-    ret = [];
-  else if (isFunction(this._events[type]))
-    ret = [this._events[type]];
-  else
-    ret = this._events[type].slice();
-  return ret;
-};
-
-EventEmitter.prototype.listenerCount = function(type) {
-  if (this._events) {
-    var evlistener = this._events[type];
-
-    if (isFunction(evlistener))
-      return 1;
-    else if (evlistener)
-      return evlistener.length;
-  }
-  return 0;
-};
-
-EventEmitter.listenerCount = function(emitter, type) {
-  return emitter.listenerCount(type);
-};
-
-function isFunction(arg) {
-  return typeof arg === 'function';
-}
-
-function isNumber(arg) {
-  return typeof arg === 'number';
-}
-
-function isObject(arg) {
-  return typeof arg === 'object' && arg !== null;
-}
-
-function isUndefined(arg) {
-  return arg === void 0;
-}
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const mode = {
-  personal: 0,
-  online: 1,
-  Observer: 2
-}
-/* harmony export (immutable) */ __webpack_exports__["b"] = mode;
-
-
-const POTR = 8088;
-/* harmony export (immutable) */ __webpack_exports__["a"] = POTR;
-
-
-
-/***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports) {
 
 /**
@@ -2136,7 +2249,7 @@ module.exports = function parseuri(str) {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/* global Blob File */
@@ -2205,7 +2318,7 @@ function hasBinary (obj) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {
@@ -2225,7 +2338,7 @@ function isBuf(obj) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -2234,13 +2347,13 @@ function isBuf(obj) {
  */
 
 var eio = __webpack_require__(38);
-var Socket = __webpack_require__(20);
+var Socket = __webpack_require__(21);
 var Emitter = __webpack_require__(2);
-var parser = __webpack_require__(6);
-var on = __webpack_require__(21);
-var bind = __webpack_require__(22);
+var parser = __webpack_require__(10);
+var on = __webpack_require__(22);
+var bind = __webpack_require__(23);
 var debug = __webpack_require__(1)('socket.io-client:manager');
-var indexOf = __webpack_require__(19);
+var indexOf = __webpack_require__(20);
 var Backoff = __webpack_require__(55);
 
 /**
@@ -2804,14 +2917,14 @@ Manager.prototype.onreconnect = function () {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * Module dependencies
  */
 
-var XMLHttpRequest = __webpack_require__(7);
+var XMLHttpRequest = __webpack_require__(11);
 var XHR = __webpack_require__(42);
 var JSONP = __webpack_require__(50);
 var websocket = __webpack_require__(51);
@@ -2864,18 +2977,18 @@ function polling (opts) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * Module dependencies.
  */
 
-var Transport = __webpack_require__(8);
+var Transport = __webpack_require__(12);
 var parseqs = __webpack_require__(4);
 var parser = __webpack_require__(3);
 var inherit = __webpack_require__(5);
-var yeast = __webpack_require__(18);
+var yeast = __webpack_require__(19);
 var debug = __webpack_require__(1)('engine.io-client:polling');
 
 /**
@@ -2889,7 +3002,7 @@ module.exports = Polling;
  */
 
 var hasXHR2 = (function () {
-  var XMLHttpRequest = __webpack_require__(7);
+  var XMLHttpRequest = __webpack_require__(11);
   var xhr = new XMLHttpRequest({ xdomain: false });
   return null != xhr.responseType;
 })();
@@ -3115,7 +3228,7 @@ Polling.prototype.uri = function () {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3190,7 +3303,7 @@ module.exports = yeast;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
 
@@ -3205,7 +3318,7 @@ module.exports = function(arr, obj){
 };
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -3213,11 +3326,11 @@ module.exports = function(arr, obj){
  * Module dependencies.
  */
 
-var parser = __webpack_require__(6);
+var parser = __webpack_require__(10);
 var Emitter = __webpack_require__(2);
 var toArray = __webpack_require__(54);
-var on = __webpack_require__(21);
-var bind = __webpack_require__(22);
+var on = __webpack_require__(22);
+var bind = __webpack_require__(23);
 var debug = __webpack_require__(1)('socket.io-client:socket');
 var parseqs = __webpack_require__(4);
 
@@ -3629,7 +3742,7 @@ Socket.prototype.compress = function (compress) {
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports) {
 
 
@@ -3659,7 +3772,7 @@ function on (obj, ev, fn) {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports) {
 
 /**
@@ -3688,13 +3801,13 @@ module.exports = function(obj, fn){
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__scene__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__player__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__scene__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__player__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__game__ = __webpack_require__(28);
 
 
@@ -3732,14 +3845,14 @@ document.querySelector('.close').onclick = function() {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__images_black_png__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__images_black_png__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__images_black_png___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__images_black_png__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__images_white_png__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__images_white_png__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__images_white_png___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__images_white_png__);
 
 
@@ -3759,9 +3872,9 @@ class Scene {
   readerPiece(x, y, color) {
     let interval = this.getInterval();
     if (color === 'black') {
-      Object(__WEBPACK_IMPORTED_MODULE_0__util__["a" /* drawImg */])(this.piecesCtx, __WEBPACK_IMPORTED_MODULE_1__images_black_png___default.a, (x - 0.45) * interval, (y - 0.45) * interval, interval * 0.9)
+      Object(__WEBPACK_IMPORTED_MODULE_0__util__["b" /* drawImg */])(this.piecesCtx, __WEBPACK_IMPORTED_MODULE_1__images_black_png___default.a, (x - 0.45) * interval, (y - 0.45) * interval, interval * 0.9)
     } else {
-      Object(__WEBPACK_IMPORTED_MODULE_0__util__["a" /* drawImg */])(this.piecesCtx, __WEBPACK_IMPORTED_MODULE_2__images_white_png___default.a, (x - 0.45) * interval, (y - 0.45) * interval, interval * 0.9)
+      Object(__WEBPACK_IMPORTED_MODULE_0__util__["b" /* drawImg */])(this.piecesCtx, __WEBPACK_IMPORTED_MODULE_2__images_white_png___default.a, (x - 0.45) * interval, (y - 0.45) * interval, interval * 0.9)
     }
   }
 
@@ -3800,8 +3913,8 @@ class Scene {
   _renderBoard() {
     let interval = this.borderMapSize / (this.row - 1);
     for (let i = 0; i < this.row; i++) {
-      Object(__WEBPACK_IMPORTED_MODULE_0__util__["b" /* drawLine */])(this.boardCtx, 0, i * interval, this.borderMapSize, i * interval)
-      Object(__WEBPACK_IMPORTED_MODULE_0__util__["b" /* drawLine */])(this.boardCtx, i * interval, 0, i * interval, this.borderMapSize)
+      Object(__WEBPACK_IMPORTED_MODULE_0__util__["c" /* drawLine */])(this.boardCtx, 0, i * interval, this.borderMapSize, i * interval)
+      Object(__WEBPACK_IMPORTED_MODULE_0__util__["c" /* drawLine */])(this.boardCtx, i * interval, 0, i * interval, this.borderMapSize)
     }
   }
 }
@@ -3810,42 +3923,31 @@ class Scene {
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "app/images/black.af1a93c81128349af114bd1567bf77d8.png";
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "app/images/white.b7d0737483a0e1c8d3a5a478fa20bd27.png";
-
-/***/ }),
-/* 27 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-class Player  {
-  constructor(nickname) {
-    this.nickname = nickname;
-    this.id = null;
-  }
-}
-/* unused harmony export Player */
-
-
 
 /***/ }),
 /* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_events__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_events__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_events___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_events__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__config__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__config__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__online__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ai__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__player__ = __webpack_require__(7);
+
+
 
 
 
@@ -3867,21 +3969,33 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
     this._initBorderArr();
     this.currentPlayerId = 1;
     if (this.setting.mode === __WEBPACK_IMPORTED_MODULE_1__config__["b" /* mode */].personal) {
+
       this._initPersonal();
     } else if (this.setting.mode === __WEBPACK_IMPORTED_MODULE_1__config__["b" /* mode */].online) {
       this._initOnline();
     } else if (this.setting.mode === __WEBPACK_IMPORTED_MODULE_1__config__["b" /* mode */].observer) {
       this._initObserver();
     } else {
-      this.addPlayer({ nickname: '黑', id: 1 });
-      this.addPlayer({ nickname: '白', id: 2 });
       this._initFree();
     }
   }
 
 
   _initPersonal() {
+    let me = this;
+    me.addPlayer(new __WEBPACK_IMPORTED_MODULE_5__player__["a" /* Player */]({ nickname: '黑', id: 1 }));
+    me.addPlayer(new __WEBPACK_IMPORTED_MODULE_4__ai__["a" /* AI */]({ nickname: '白', id: 2 }));
 
+    me.players[1].on('move', function(currentPlayerId, x, y) {
+      me._updataBoard({ currentPlayerId, x, y });
+      me._toggleCurrentPlayerId();
+    })
+
+    me.on('move', function(currentPlayerId, x, y) {
+      me._updataBoard({ currentPlayerId, x, y });
+      me._toggleCurrentPlayerId();
+      me.players[1].move(this.borderArr);
+    })
   }
 
   _initOnline() {
@@ -3902,7 +4016,6 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
     });
 
     me.online.socket.on('move', function({ currentPlayerId, x, y }) {
-      console.log(currentPlayerId, x, y);
       me._updataBoard({ currentPlayerId, x, y });
     })
 
@@ -3920,8 +4033,10 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
   }
 
   _initFree() {
-    this.on('move', function(id, x, y) {
-      this._updataBoard({ id, x, y });
+    this.addPlayer(new __WEBPACK_IMPORTED_MODULE_5__player__["a" /* Player */]({ nickname: '黑', id: 1 }));
+    this.addPlayer(new __WEBPACK_IMPORTED_MODULE_5__player__["a" /* Player */]({ nickname: '白', id: 2 }));
+    this.on('move', function(currentPlayerId, x, y) {
+      this._updataBoard({ currentPlayerId, x, y });
       this._toggleCurrentPlayerId();
     })
   }
@@ -3973,7 +4088,7 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
 
   _checkWin(x, y) {
     // 横向检查
-    for (let i = 0, count = 0; i < this.sence.row; i++) {
+    for (let i = 0, count = 0; i < this.sence.row - 1; i++) {
       if (this.borderArr[x][i] !== 0 && this.borderArr[x][i] === this.borderArr[x][i + 1]) {
         count++;
         if (count === 4) {
@@ -3984,7 +4099,7 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
       }
     }
     //纵向检查
-    for (let i = 0, count = 0; i < this.sence.row; i++) {
+    for (let i = 0, count = 0; i < this.sence.row - 1; i++) {
       if (this.borderArr[i][y] !== 0 && this.borderArr[i][y] === this.borderArr[i + 1][y]) {
         count++;
         if (count === 4) {
@@ -3998,7 +4113,7 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
     // 斜\检查
     var temp = x < y ? x : y;
     for (let i = 0, x1 = x - temp, y1 = y - temp, count = 0; i < this.sence.row; i++) {
-      if (x1 + i + 1 > this.sence.row || y1 + i + 1 > this.sence.row) {
+      if (x1 + i + 1 > this.sence.row - 1 || y1 + i + 1 > this.sence.row - 1) {
         break;
       }
       if (this.borderArr[x1 + i][y1 + i] !== 0 && this.borderArr[x1 + i][y1 + i] === this.borderArr[x1 + i + 1][y1 + i + 1]) {
@@ -4014,7 +4129,7 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
     // 斜/检查
     var temp = x < this.sence.row - y ? x : this.sence.row - y;
     for (let i = 0, x1 = x - temp, y1 = y + temp, count = 0; i < this.sence.row; i++) {
-      if (x1 + i + 1 > this.sence.row || y1 - i - 1 < 0) {
+      if (x1 + i + 1 > this.sence.row - 1 || y1 - i - 1 < 0) {
         break;
       }
       if (this.borderArr[x1 + i][y1 - i] !== 0 && this.borderArr[x1 + i][y1 - i] === this.borderArr[x1 + i + 1][y1 - i - 1]) {
@@ -4052,9 +4167,9 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_socket_io_client__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_socket_io_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_socket_io_client__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_events__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_events__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_events___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_events__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config__ = __webpack_require__(9);
 
 
 
@@ -4113,8 +4228,8 @@ class Online extends __WEBPACK_IMPORTED_MODULE_1_events__["EventEmitter"] {
  */
 
 var url = __webpack_require__(31);
-var parser = __webpack_require__(6);
-var Manager = __webpack_require__(15);
+var parser = __webpack_require__(10);
+var Manager = __webpack_require__(16);
 var debug = __webpack_require__(1)('socket.io-client');
 
 /**
@@ -4199,8 +4314,8 @@ exports.connect = lookup;
  * @api public
  */
 
-exports.Manager = __webpack_require__(15);
-exports.Socket = __webpack_require__(20);
+exports.Manager = __webpack_require__(16);
+exports.Socket = __webpack_require__(21);
 
 
 /***/ }),
@@ -4212,7 +4327,7 @@ exports.Socket = __webpack_require__(20);
  * Module dependencies.
  */
 
-var parseuri = __webpack_require__(12);
+var parseuri = __webpack_require__(13);
 var debug = __webpack_require__(1)('socket.io-client:url');
 
 /**
@@ -4863,7 +4978,7 @@ module.exports = Array.isArray || function (arr) {
  */
 
 var isArray = __webpack_require__(37);
-var isBuf = __webpack_require__(14);
+var isBuf = __webpack_require__(15);
 var toString = Object.prototype.toString;
 var withNativeBlob = typeof global.Blob === 'function' || toString.call(global.Blob) === '[object BlobConstructor]';
 var withNativeFile = typeof global.File === 'function' || toString.call(global.File) === '[object FileConstructor]';
@@ -5043,12 +5158,12 @@ module.exports.parser = __webpack_require__(3);
  * Module dependencies.
  */
 
-var transports = __webpack_require__(16);
+var transports = __webpack_require__(17);
 var Emitter = __webpack_require__(2);
 var debug = __webpack_require__(1)('engine.io-client:socket');
-var index = __webpack_require__(19);
+var index = __webpack_require__(20);
 var parser = __webpack_require__(3);
-var parseuri = __webpack_require__(12);
+var parseuri = __webpack_require__(13);
 var parsejson = __webpack_require__(53);
 var parseqs = __webpack_require__(4);
 
@@ -5183,8 +5298,8 @@ Socket.protocol = parser.protocol; // this is an int
  */
 
 Socket.Socket = Socket;
-Socket.Transport = __webpack_require__(8);
-Socket.transports = __webpack_require__(16);
+Socket.Transport = __webpack_require__(12);
+Socket.transports = __webpack_require__(17);
 Socket.parser = __webpack_require__(3);
 
 /**
@@ -5817,8 +5932,8 @@ try {
  * Module requirements.
  */
 
-var XMLHttpRequest = __webpack_require__(7);
-var Polling = __webpack_require__(17);
+var XMLHttpRequest = __webpack_require__(11);
+var Polling = __webpack_require__(18);
 var Emitter = __webpack_require__(2);
 var inherit = __webpack_require__(5);
 var debug = __webpack_require__(1)('engine.io-client:polling-xhr');
@@ -6797,7 +6912,7 @@ module.exports = (function() {
  * Module requirements.
  */
 
-var Polling = __webpack_require__(17);
+var Polling = __webpack_require__(18);
 var inherit = __webpack_require__(5);
 
 /**
@@ -7034,11 +7149,11 @@ JSONPPolling.prototype.doWrite = function (data, fn) {
  * Module dependencies.
  */
 
-var Transport = __webpack_require__(8);
+var Transport = __webpack_require__(12);
 var parser = __webpack_require__(3);
 var parseqs = __webpack_require__(4);
 var inherit = __webpack_require__(5);
-var yeast = __webpack_require__(18);
+var yeast = __webpack_require__(19);
 var debug = __webpack_require__(1)('engine.io-client:websocket');
 var BrowserWebSocket = global.WebSocket || global.MozWebSocket;
 var NodeWebSocket;
@@ -7471,6 +7586,126 @@ Backoff.prototype.setJitter = function(jitter){
   this.jitter = jitter;
 };
 
+
+
+/***/ }),
+/* 56 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__player__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config__ = __webpack_require__(9);
+
+
+
+class AI extends __WEBPACK_IMPORTED_MODULE_0__player__["a" /* Player */] {
+  constructor({ nickname, id }) {
+    super({ nickname, id })
+    this.mark = 'ai';
+    this.board = null;
+    this.boardMode = [];
+
+  }
+
+  _initboardMode() {
+    for (let z = 0; z < 4; z++) {
+      this.boardMode[z] = []
+      for (let i = 0; i < 15; i++) {
+        this.boardMode[z][i] = [];
+        for (let j = 0; j < 15; j++) {
+          this.boardMode[z][i][j] = '';
+        }
+      }
+    }
+  }
+
+  _updataBoardMode(board) {
+    this.board = board;
+    this._initboardMode();
+    for (let i = 0; i < 15; i++) {
+      for (let j = 0; j < 15; j++) {
+        if (this.board[i][j] === 0) {} else {
+          if (this.id === this.board[i][j]) {
+            this._getDirection(i, j).forEach(function(element) {
+              let res = __WEBPACK_IMPORTED_MODULE_1__util__["a" /* directionFn */][element](board, i, j, this.board[i][j], __WEBPACK_IMPORTED_MODULE_1__util__["d" /* to */])
+              if (this.boardMode[0][i + res.h][j + res.v] < __WEBPACK_IMPORTED_MODULE_2__config__["d" /* modeScore */][__WEBPACK_IMPORTED_MODULE_2__config__["c" /* modeMapM */][res.count]]) {
+                this.boardMode[0][i + res.h][j + res.v] = __WEBPACK_IMPORTED_MODULE_2__config__["d" /* modeScore */][__WEBPACK_IMPORTED_MODULE_2__config__["c" /* modeMapM */][res.count]];
+                this.boardMode[2][i + res.h][j + res.v] = res.count;
+              }
+            }, this);
+          } else {
+            this._getDirection(i, j).forEach(function(element) {
+              let res = __WEBPACK_IMPORTED_MODULE_1__util__["a" /* directionFn */][element](board, i, j, this.board[i][j], __WEBPACK_IMPORTED_MODULE_1__util__["d" /* to */])
+              if (this.boardMode[1][i + res.h][j + res.v] < __WEBPACK_IMPORTED_MODULE_2__config__["d" /* modeScore */][__WEBPACK_IMPORTED_MODULE_2__config__["c" /* modeMapM */][res.count]]) {
+                this.boardMode[1][i + res.h][j + res.v] = __WEBPACK_IMPORTED_MODULE_2__config__["d" /* modeScore */][__WEBPACK_IMPORTED_MODULE_2__config__["c" /* modeMapM */][res.count]];
+                this.boardMode[3][i + res.h][j + res.v] = res.count;
+              }
+            }, this);
+          }
+        }
+      }
+    }
+  }
+
+  //获取当前棋子的可以落子的方向
+  _getDirection(i, j) {
+    var ret = [];
+    if (i - 1 >= 0 && this.board[i - 1][j] === 0) ret.push('L');
+    if (j - 1 >= 0 && this.board[i][j - 1] === 0) ret.push('U');
+    if (i + 1 <= 14 && this.board[i + 1][j] === 0) ret.push('R');
+    if (j + 1 <= 14 && this.board[i][j + 1] === 0) ret.push('B');
+    if (i - 1 >= 0 && j - 1 >= 0 && this.board[i - 1][j - 1] === 0) ret.push('LU');
+    if (i + 1 <= 14 && j + 1 <= 14 && this.board[i + 1][j + 1] === 0) ret.push('RB');
+    if (i - 1 >= 0 && j + 1 <= 14 && this.board[i - 1][j + 1] === 0) ret.push('LB');
+    if (i + 1 <= 14 && j - 1 >= 0 && this.board[i + 1][j - 1] === 0) ret.push('RU');
+    return ret;
+  }
+
+  move(board) {
+    this._updataBoardMode(board);
+    let locations = this.findBest();
+    console.log(locations)
+    var item = locations[Math.floor(Math.random() * locations.length)]
+    this.emit('move', this.id, item.i, item.j);
+    this._updataBoardMode(board)
+    console.table(arr(this.boardMode[3]))
+  }
+
+  findBest() {
+    let temp = 0;
+    let locations = []
+    for (let z = 0; z < 2; z++) {
+      for (let i = 0; i < 15; i++) {
+        for (let j = 0; j < 15; j++) {
+          if (this.boardMode[z][i][j] !== 0 && this.boardMode[z][i][j] == temp) {
+            locations.push({ i, j })
+          }
+          if (this.boardMode[z][i][j] > temp) {
+            temp = this.boardMode[z][i][j]
+            locations = []
+            locations.push({ i, j })
+          }
+        }
+      }
+    }
+    return locations;
+  }
+
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = AI;
+
+
+function arr(arr) {
+  let ret = []
+  for (let i = 0; i < 15; i++) {
+    ret[i] = []
+    for (let j = 0; j < 15; j++) {
+      ret[i][j] = arr[j][i]
+    }
+  }
+  return ret;
+}
 
 
 /***/ })
