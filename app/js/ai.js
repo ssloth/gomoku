@@ -1,6 +1,6 @@
 import { Player } from './player';
 import { to, directionFn, assign } from './util';
-import { modeMapM, modeMapM, directionMap, modeScore } from './config';
+import { modeMapM, modeMapR, directionMap, modeScore } from './config';
 export class AI extends Player {
   constructor({ nickname, id }) {
     super({ nickname, id })
@@ -29,7 +29,6 @@ export class AI extends Player {
         if (this.board[i][j] === 0) {} else {
           if (this.id === this.board[i][j]) {
             this._getDirection(i, j).forEach(function(element) {
-
               let res = directionFn[element](board, i, j, this.board[i][j], to)
               let thereScore = this.boardMode[0][res.i][res.j];
               thereScore[element] = modeScore[modeMapM[res.count]];
@@ -45,7 +44,7 @@ export class AI extends Player {
             this._getDirection(i, j).forEach(function(element) {
               let res = directionFn[element](board, i, j, this.board[i][j], to)
               let thereScore = this.boardMode[1][res.i][res.j];
-              thereScore[element] = modeScore[modeMapM[res.count]];
+              thereScore[element] = modeScore[modeMapR[res.count]];
               if (thereScore[element] > thereScore['maxScore']) {
                 thereScore['maxScore'] = thereScore[element];
               }
@@ -89,17 +88,17 @@ export class AI extends Player {
       for (let i = 0; i < 15; i++) {
         for (let j = 0; j < 15; j++) {
           if (this.boardMode[z][i][j]['maxScore'] !== 0 && this.boardMode[z][i][j]['maxScore'] == temp) {
-            locations.push({ i, j })
+            locations.push({ i, j, temp,a:'a'})
           }
+
           if (this.boardMode[z][i][j]['maxScore'] > temp) {
             temp = this.boardMode[z][i][j]['maxScore']
             locations = []
-            locations.push({ i, j })
+            locations.push({ i, j, temp})
           }
         }
       }
     }
-    console.log(temp);
     return locations;
   }
 
