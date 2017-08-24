@@ -33,7 +33,7 @@ document.querySelector('.close').onclick = function() {
 }
 
 window.onresize = function() {
-  if(game.sence){
+  if (game.sence) {
     game.sence.refresh();
     game.render();
   }

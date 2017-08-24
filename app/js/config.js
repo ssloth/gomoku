@@ -36,7 +36,7 @@ export const directionMap = {
   'LB':'RU',
 }
 
-export const modeMapR = {
+export const modeMapM = {
   '-1': 'rd1',
   '1': 'rl1',
   '-2': 'rd2',
@@ -48,7 +48,7 @@ export const modeMapR = {
   '5': 'rl5'
 }
 
-export const modeMapM = {
+export const modeMapR = {
   '-1': 'md1',
   '1': 'ml1',
   '-2': 'md2',

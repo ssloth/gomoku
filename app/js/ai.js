@@ -7,7 +7,6 @@ export class AI extends Player {
     this.mark = 'ai';
     this.board = null;
     this.boardMode = [];
-
   }
 
   _initboardMode() {
@@ -43,7 +42,6 @@ export class AI extends Player {
               this.boardMode[2][res.i][res.j] = res.count;
             }, this);
           } else {
-            console.log(directionMap)
             this._getDirection(i, j).forEach(function(element) {
               let res = directionFn[element](board, i, j, this.board[i][j], to)
               let thereScore = this.boardMode[1][res.i][res.j];
@@ -51,7 +49,6 @@ export class AI extends Player {
               if (thereScore[element] > thereScore['maxScore']) {
                 thereScore['maxScore'] = thereScore[element];
               }
-
               if (thereScore[directionMap[element]]) {
                 thereScore['maxScore'] += thereScore[directionMap[element]];
               }
@@ -102,18 +99,9 @@ export class AI extends Player {
         }
       }
     }
+    console.log(temp);
     return locations;
   }
 
 }
 
-function arr(arr) {
-  let ret = []
-  for (let i = 0; i < 15; i++) {
-    ret[i] = []
-    for (let j = 0; j < 15; j++) {
-      ret[i][j] = arr[j][i]
-    }
-  }
-  return ret;
-}
