@@ -1,5 +1,5 @@
 import { Player } from './player';
-import { to, directionFn, assign } from './util';
+import { to, directionFn } from './util';
 import { modeMapM, modeMapR, directionMap, modeScore } from './config';
 export class AI extends Player {
   constructor({ nickname, id }) {
@@ -32,26 +32,30 @@ export class AI extends Player {
               let res = directionFn[element](board, i, j, this.board[i][j], to)
               let thereScore = this.boardMode[0][res.i][res.j];
               thereScore[element] = modeScore[modeMapM[res.count]];
-              if (thereScore[element] > thereScore['maxScore']) {
-                thereScore['maxScore'] = thereScore[element];
-              }
+              if (i === 1 && j === 1) console.log(modeMapM[4], 'ml4', modeMapM[3] == 'ml4')
               if (thereScore[directionMap[element]]) {
                 thereScore['maxScore'] += thereScore[directionMap[element]];
+                this.boardMode[2][res.i][res.j] = res.count;
               }
-              this.boardMode[2][res.i][res.j] = res.count;
+              if (thereScore[element] > thereScore['maxScore']) {
+                thereScore['maxScore'] = thereScore[element];
+                this.boardMode[2][res.i][res.j] = res.count;
+              }
             }, this);
           } else {
             this._getDirection(i, j).forEach(function(element) {
+
               let res = directionFn[element](board, i, j, this.board[i][j], to)
               let thereScore = this.boardMode[1][res.i][res.j];
               thereScore[element] = modeScore[modeMapR[res.count]];
-              if (thereScore[element] > thereScore['maxScore']) {
-                thereScore['maxScore'] = thereScore[element];
-              }
               if (thereScore[directionMap[element]]) {
                 thereScore['maxScore'] += thereScore[directionMap[element]];
+                this.boardMode[3][res.i][res.j] = res.count;
               }
-              this.boardMode[3][res.i][res.j] = res.count;
+              if (thereScore[element] > thereScore['maxScore']) {
+                this.boardMode[3][res.i][res.j] = res.count;
+                thereScore['maxScore'] = thereScore[element];
+              }
             }, this);
           }
         }
@@ -77,8 +81,12 @@ export class AI extends Player {
     this._updataBoardMode(board);
     let locations = this.findBest();
     var item = locations[Math.floor(Math.random() * locations.length)]
+    console.table(arr(this.boardMode[2]));
+    console.table(arr(this.boardMode[3]));
     this.emit('move', this.id, item.i, item.j);
     this._updataBoardMode(board)
+    console.table(arr(this.boardMode[2]));
+    console.log('end----');
   }
 
   findBest() {
@@ -88,13 +96,12 @@ export class AI extends Player {
       for (let i = 0; i < 15; i++) {
         for (let j = 0; j < 15; j++) {
           if (this.boardMode[z][i][j]['maxScore'] !== 0 && this.boardMode[z][i][j]['maxScore'] == temp) {
-            locations.push({ i, j, temp,a:'a'})
+            locations.push({ i, j, temp, a: 'a' })
           }
-
           if (this.boardMode[z][i][j]['maxScore'] > temp) {
             temp = this.boardMode[z][i][j]['maxScore']
             locations = []
-            locations.push({ i, j, temp})
+            locations.push({ i, j, temp })
           }
         }
       }
@@ -104,3 +111,13 @@ export class AI extends Player {
 
 }
 
+function arr(arr) {
+  let ret = []
+  for (let i = 0; i < 15; i++) {
+    ret[i] = []
+    for (let j = 0; j < 15; j++) {
+      ret[i][j] = arr[j][i]
+    }
+  }
+  return ret;
+}

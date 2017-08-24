@@ -34,7 +34,9 @@ export const directionFn = {
 
 export function to(board, i, j, id, { h, v }) {
   function _to(i, j, id, count) {
-    if (j === 0 || i === 0 || i === 14 || j === 14) { return count; }
+    if ((i === 0 && h === 1) || (j === 0 && v === 1) || (i === 14 && h === -1) || (j === 14 && v === -1)) {
+      return -count;
+    }
     if (board[i - h][j - v] === 0) {
       return count;
     }
@@ -44,12 +46,4 @@ export function to(board, i, j, id, { h, v }) {
     return _to(i - h, j - v, id, count + 1);
   }
   return _to(i, j, id, 1);
-}
-
-
-export function assign(oldSocre, newSocre) {
-  if (oldSocre.direction === newSocre.direction && oldSocre.score > newSocre.score) {
-    Object.assign.Object(newSocre, oldSocre);
-  }
-  return Object.assign.Object(oldSocre, newSocre)
 }

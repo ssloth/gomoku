@@ -12,28 +12,28 @@ export const modeScore = {
   rd3: 500,
   rl3: 600,
   rd4: 1000,
-  rl4: 9999,
-  rl5: 9999,
+  rl4: 1000,
+  rl5: 1000,
   md1: 110,
   ml1: 210,
   md2: 360,
   ml2: 410,
   md3: 510,
   ml3: 610,
-  md4: 5000,
-  ml4: 10000,
-  ml5: 10000,
+  ml4: 10001,
+  md4: 10001,
+  ml5: 10001,
 }
 
 export const directionMap = {
-  'U':'B',
-  'L':'R',
-  'LU':'RB',
-  'RU':'LB',
-  'B':'U',
-  'R':'L',
-  'RB':'LU',
-  'LB':'RU',
+  'U': 'B',
+  'L': 'R',
+  'LU': 'RB',
+  'RU': 'LB',
+  'B': 'U',
+  'R': 'L',
+  'RB': 'LU',
+  'LB': 'RU',
 }
 
 export const modeMapR = {
@@ -56,19 +56,8 @@ export const modeMapM = {
   '-3': 'md3',
   '3': 'ml3',
   '-4': 'md4',
-  '4':' ml4',
+  '4': 'ml4',
   '5': 'ml5'
-}
-
-export const direction = {
-  ['L']() {},
-  ['R']() {},
-  ['U']() {},
-  ['B']() {},
-  ['LU']() {},
-  ['LB']() {},
-  ['RU']() {},
-  ['RB']() {},
 }
 
 export const POTR = 8088;

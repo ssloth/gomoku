@@ -21,7 +21,6 @@ export class Game extends EventEmitter {
     this._initBorderArr();
     this.currentPlayerId = 1;
     if (this.setting.mode === mode.personal) {
-
       this._initPersonal();
     } else if (this.setting.mode === mode.online) {
       this._initOnline();
@@ -87,9 +86,12 @@ export class Game extends EventEmitter {
   _initFree() {
     this.addPlayer(new Player({ nickname: '黑', id: 1 }));
     this.addPlayer(new Player({ nickname: '白', id: 2 }));
+    this.addPlayer(new AI({ nickname: 'AI', id: 2 }));
     this.on('move', function(currentPlayerId, x, y) {
       this._updataBoard({ currentPlayerId, x, y });
       this._toggleCurrentPlayerId();
+      this.players[2]._updataBoardMode(this.borderArr);
+      console.table(arr(this.players[2].boardMode[2]))
     })
   }
 
@@ -206,4 +208,15 @@ export class Game extends EventEmitter {
     }
   }
 
+}
+
+function arr(arr) {
+  let ret = []
+  for (let i = 0; i < 15; i++) {
+    ret[i] = []
+    for (let j = 0; j < 15; j++) {
+      ret[i][j] = arr[j][i]
+    }
+  }
+  return ret;
 }
