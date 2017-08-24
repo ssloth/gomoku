@@ -5,24 +5,35 @@ export const mode = {
 }
 
 export const modeScore = {
-  rd1: 0,
-  rl1: 50,
-  rd2: 150,
-  rl2: 200,
-  rd3: 250,
-  rl3: 300,
-  rd4: 350,
-  rl4: 400,
-  rl5: 500,
-  md1: 10,
-  ml1: 60,
-  md2: 160,
-  ml2: 210,
-  md3: 260,
-  ml3: 310,
-  md4: 360,
-  md4: 410,
-  ml5: 500
+  rd1: 100,
+  rl1: 200,
+  rd2: 350,
+  rl2: 400,
+  rd3: 500,
+  rl3: 600,
+  rd4: 1000,
+  rl4: 9999,
+  rl5: 9999,
+  md1: 110,
+  ml1: 210,
+  md2: 360,
+  ml2: 410,
+  md3: 510,
+  ml3: 610,
+  md4: 5000,
+  ml4: 10000,
+  ml5: 10000,
+}
+
+export const directionMap = {
+  'U':'B',
+  'L':'R',
+  'LU':'RB',
+  'RU':'LB',
+  'B':'U',
+  'R':'L',
+  'RB':'LU',
+  'LB':'RU',
 }
 
 export const modeMapR = {

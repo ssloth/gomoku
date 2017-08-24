@@ -94,10 +94,9 @@ export class Game extends EventEmitter {
   }
 
   _initBorderArr() {
-    let row = this.sence.getRow();
-    for (let i = 0; i < row; i++) {
+    for (let i = 0; i < 15; i++) {
       this.borderArr[i] = []
-      for (let j = 0; j < row; j++) {
+      for (let j = 0; j < 15; j++) {
         this.borderArr[i][j] = 0;
       }
     }
@@ -140,7 +139,7 @@ export class Game extends EventEmitter {
 
   _checkWin(x, y) {
     // 横向检查
-    for (let i = 0, count = 0; i < this.sence.row - 1; i++) {
+    for (let i = 0, count = 0; i < 14; i++) {
       if (this.borderArr[x][i] !== 0 && this.borderArr[x][i] === this.borderArr[x][i + 1]) {
         count++;
         if (count === 4) {
@@ -151,7 +150,7 @@ export class Game extends EventEmitter {
       }
     }
     //纵向检查
-    for (let i = 0, count = 0; i < this.sence.row - 1; i++) {
+    for (let i = 0, count = 0; i < 14; i++) {
       if (this.borderArr[i][y] !== 0 && this.borderArr[i][y] === this.borderArr[i + 1][y]) {
         count++;
         if (count === 4) {
@@ -164,8 +163,8 @@ export class Game extends EventEmitter {
 
     // 斜\检查
     var temp = x < y ? x : y;
-    for (let i = 0, x1 = x - temp, y1 = y - temp, count = 0; i < this.sence.row; i++) {
-      if (x1 + i + 1 > this.sence.row - 1 || y1 + i + 1 > this.sence.row - 1) {
+    for (let i = 0, x1 = x - temp, y1 = y - temp, count = 0; i < 15; i++) {
+      if (x1 + i + 1 > 15 - 1 || y1 + i + 1 > 15 - 1) {
         break;
       }
       if (this.borderArr[x1 + i][y1 + i] !== 0 && this.borderArr[x1 + i][y1 + i] === this.borderArr[x1 + i + 1][y1 + i + 1]) {
@@ -179,9 +178,9 @@ export class Game extends EventEmitter {
     }
 
     // 斜/检查
-    var temp = x < this.sence.row - y ? x : this.sence.row - y;
-    for (let i = 0, x1 = x - temp, y1 = y + temp, count = 0; i < this.sence.row; i++) {
-      if (x1 + i + 1 > this.sence.row - 1 || y1 - i - 1 < 0) {
+    var temp = x < 15 - y ? x : 15 - y;
+    for (let i = 0, x1 = x - temp, y1 = y + temp, count = 0; i < 15; i++) {
+      if (x1 + i + 1 > 15 - 1 || y1 - i - 1 < 0) {
         break;
       }
       if (this.borderArr[x1 + i][y1 - i] !== 0 && this.borderArr[x1 + i][y1 - i] === this.borderArr[x1 + i + 1][y1 - i - 1]) {
@@ -197,9 +196,9 @@ export class Game extends EventEmitter {
 
 
   render() {
-    let row = this.sence.getRow();
-    for (let i = 0; i < row; i++) {
-      for (let j = 0; j < row; j++) {
+    this.sence.clean();
+    for (let i = 0; i < 15; i++) {
+      for (let j = 0; j < 15; j++) {
         if (this.borderArr[i][j] != 0) {
           this.sence.readerPiece(i, j, this.borderArr[i][j] === 1 ? 'black' : 'white')
         }

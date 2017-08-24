@@ -3,35 +3,39 @@ import black from '../images/black.png';
 import white from '../images/white.png';
 
 export class Scene {
-  constructor(row = 15) {
+  constructor() {
     this.wrapper = document.getElementById('wrapper');
     this.boardCanvas = document.getElementById('board');
     this.boardCtx = this.boardCanvas.getContext('2d');
     this.piecesCanvas = document.getElementById('pieces');
     this.piecesCtx = this.piecesCanvas.getContext('2d');
-    this.row = row;
     this._init();
   }
 
   readerPiece(x, y, color) {
     let interval = this.getInterval();
     if (color === 'black') {
-      drawImg(this.piecesCtx, black, (x - 0.45) * interval, (y - 0.45) * interval, interval * 0.9)
+      drawImg(this.piecesCtx, black, (x - 0.45) * interval, (y - 0.45) * interval, interval )
     } else {
-      drawImg(this.piecesCtx, white, (x - 0.45) * interval, (y - 0.45) * interval, interval * 0.9)
+      drawImg(this.piecesCtx, white, (x - 0.45) * interval, (y - 0.45) * interval, interval )
     }
   }
 
+  clean() {
+    this.piecesCtx.clearRect(0,0,this.piecesCanvas.width,this.piecesCanvas.width)
+  }
+
   getInterval() {
-    return this.borderMapSize / (this.row - 1);
+    return this.borderMapSize / 14;
   }
 
   getBorderMapSize() {
     return this.borderMapSize;
   }
 
-  getRow() {
-    return this.row;
+
+  refresh() {
+    this._init();
   }
 
   _init() {
@@ -55,8 +59,8 @@ export class Scene {
 
 
   _renderBoard() {
-    let interval = this.borderMapSize / (this.row - 1);
-    for (let i = 0; i < this.row; i++) {
+    let interval = this.borderMapSize / 14;
+    for (let i = 0; i < 15; i++) {
       drawLine(this.boardCtx, 0, i * interval, this.borderMapSize, i * interval)
       drawLine(this.boardCtx, i * interval, 0, i * interval, this.borderMapSize)
     }
