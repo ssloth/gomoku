@@ -57,7 +57,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "http://SSnewbie.coding.me/Test/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 24);
@@ -1128,7 +1128,8 @@ module.exports = function(a, b){
 /* harmony export (immutable) */ __webpack_exports__["b"] = drawImg;
 /* unused harmony export tip */
 /* harmony export (immutable) */ __webpack_exports__["d"] = to;
-function drawLine(context, x1, y1, x2, y2, color = '#989796') {
+/* unused harmony export assign */
+function drawLine(context, x1, y1, x2, y2, color = '#9bc0f0') {
   context.strokeStyle = color;
   context.beginPath();
   context.moveTo(x1, y1);
@@ -1152,14 +1153,14 @@ function tip() {
 }
 
 const directionFn = {
-  ['L'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: -1, v: 0 }), h: -1, v: 0 } },
-  ['R'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 1, v: 0 }), h: 1, v: 0 } },
-  ['U'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 0, v: -1 }), h: 0, v: -1 } },
-  ['B'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 0, v: 1 }), h: 0, v: 1 } },
-  ['LU'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: -1, v: -1 }), h: -1, v: -1 } },
-  ['LB'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: -1, v: 1 }), h: -1, v: 1 } },
-  ['RU'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 1, v: -1 }), h: 1, v: -1 } },
-  ['RB'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 1, v: 1 }), h: 1, v: 1 } }
+  ['L'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: -1, v: 0 }), i: i - 1, j: j } },
+  ['R'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 1, v: 0 }), i: i + 1, j: j } },
+  ['U'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 0, v: -1 }), i: i, j: j - 1 } },
+  ['B'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 0, v: 1 }), i: i, j: j + 1 } },
+  ['LU'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: -1, v: -1 }), i: i - 1, j: j - 1 } },
+  ['LB'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: -1, v: 1 }), i: i - 1, j: j + 1 } },
+  ['RU'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 1, v: -1 }), i: i + 1, j: j + -1 } },
+  ['RB'](board, i, j, id, fn) { return { count: fn(board, i, j, id, { h: 1, v: 1 }), i: i + 1, j: j + 1 } }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = directionFn;
 
@@ -1176,6 +1177,14 @@ function to(board, i, j, id, { h, v }) {
     return _to(i - h, j - v, id, count + 1);
   }
   return _to(i, j, id, 1);
+}
+
+
+function assign(oldSocre, newSocre) {
+  if (oldSocre.direction === newSocre.direction && oldSocre.score > newSocre.score) {
+    Object.assign.Object(newSocre, oldSocre);
+  }
+  return Object.assign.Object(oldSocre, newSocre)
 }
 
 
@@ -1518,30 +1527,43 @@ const mode = {
   online: 1,
   Observer: 2
 }
-/* harmony export (immutable) */ __webpack_exports__["b"] = mode;
+/* harmony export (immutable) */ __webpack_exports__["c"] = mode;
 
 
 const modeScore = {
-  rd1: 0,
-  rl1: 50,
-  rd2: 150,
-  rl2: 200,
-  rd3: 250,
-  rl3: 300,
-  rd4: 350,
-  rl4: 400,
-  rl5: 500,
-  md1: 10,
-  ml1: 60,
-  md2: 160,
-  ml2: 210,
-  md3: 260,
-  ml3: 310,
-  md4: 360,
-  md4: 410,
-  ml5: 500
+  rd1: 100,
+  rl1: 200,
+  rd2: 350,
+  rl2: 400,
+  rd3: 500,
+  rl3: 600,
+  rd4: 1000,
+  rl4: 9999,
+  rl5: 9999,
+  md1: 110,
+  ml1: 210,
+  md2: 360,
+  ml2: 410,
+  md3: 510,
+  ml3: 610,
+  md4: 5000,
+  ml4: 10000,
+  ml5: 10000,
 }
-/* harmony export (immutable) */ __webpack_exports__["d"] = modeScore;
+/* harmony export (immutable) */ __webpack_exports__["f"] = modeScore;
+
+
+const directionMap = {
+  'U':'B',
+  'L':'R',
+  'LU':'RB',
+  'RU':'LB',
+  'B':'U',
+  'R':'L',
+  'RB':'LU',
+  'LB':'RU',
+}
+/* harmony export (immutable) */ __webpack_exports__["b"] = directionMap;
 
 
 const modeMapR = {
@@ -1555,7 +1577,7 @@ const modeMapR = {
   '4': 'rl4',
   '5': 'rl5'
 }
-/* unused harmony export modeMapR */
+/* harmony export (immutable) */ __webpack_exports__["e"] = modeMapR;
 
 
 const modeMapM = {
@@ -1569,7 +1591,7 @@ const modeMapM = {
   '4':' ml4',
   '5': 'ml5'
 }
-/* harmony export (immutable) */ __webpack_exports__["c"] = modeMapM;
+/* harmony export (immutable) */ __webpack_exports__["d"] = modeMapM;
 
 
 const direction = {
@@ -3809,22 +3831,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__scene__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__player__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__game__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__images_back_png__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__images_back_png___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__images_back_png__);
 
 
 
+
+document.body.style = `background-image:url('${__WEBPACK_IMPORTED_MODULE_3__images_back_png___default.a}')`
+
+var game = null;
 
 const control = document.getElementById('control');
-
 let nicknameDom = document.getElementById('nickname');
 let modeDom = document.getElementById('mode');
 let addDom = document.getElementById('add');
-
 document.querySelector('.ok').onclick = function() {
   let nickname = nicknameDom.value;
   let mode = +modeDom.options[modeDom.selectedIndex].value;
   let add = +addDom.options[addDom.selectedIndex].value;
   let setting = { mode, add }
-  let game = new __WEBPACK_IMPORTED_MODULE_2__game__["a" /* Game */]({ nickname, setting, sence: new __WEBPACK_IMPORTED_MODULE_0__scene__["a" /* Scene */]() });
+  game = new __WEBPACK_IMPORTED_MODULE_2__game__["a" /* Game */]({ nickname, setting, sence: new __WEBPACK_IMPORTED_MODULE_0__scene__["a" /* Scene */]() });
   control.style.display = 'none';
   window.onunload = function() {
     if (game.online) {
@@ -3843,6 +3869,13 @@ document.querySelector('.close').onclick = function() {
   control.style.display = 'none';
 }
 
+window.onresize = function() {
+  if (game.sence) {
+    game.sence.refresh();
+    game.render();
+  }
+}
+
 
 /***/ }),
 /* 25 */
@@ -3859,35 +3892,39 @@ document.querySelector('.close').onclick = function() {
 
 
 class Scene {
-  constructor(row = 15) {
+  constructor() {
     this.wrapper = document.getElementById('wrapper');
     this.boardCanvas = document.getElementById('board');
     this.boardCtx = this.boardCanvas.getContext('2d');
     this.piecesCanvas = document.getElementById('pieces');
     this.piecesCtx = this.piecesCanvas.getContext('2d');
-    this.row = row;
     this._init();
   }
 
   readerPiece(x, y, color) {
     let interval = this.getInterval();
     if (color === 'black') {
-      Object(__WEBPACK_IMPORTED_MODULE_0__util__["b" /* drawImg */])(this.piecesCtx, __WEBPACK_IMPORTED_MODULE_1__images_black_png___default.a, (x - 0.45) * interval, (y - 0.45) * interval, interval * 0.9)
+      Object(__WEBPACK_IMPORTED_MODULE_0__util__["b" /* drawImg */])(this.piecesCtx, __WEBPACK_IMPORTED_MODULE_1__images_black_png___default.a, (x - 0.45) * interval, (y - 0.45) * interval, interval )
     } else {
-      Object(__WEBPACK_IMPORTED_MODULE_0__util__["b" /* drawImg */])(this.piecesCtx, __WEBPACK_IMPORTED_MODULE_2__images_white_png___default.a, (x - 0.45) * interval, (y - 0.45) * interval, interval * 0.9)
+      Object(__WEBPACK_IMPORTED_MODULE_0__util__["b" /* drawImg */])(this.piecesCtx, __WEBPACK_IMPORTED_MODULE_2__images_white_png___default.a, (x - 0.45) * interval, (y - 0.45) * interval, interval )
     }
   }
 
+  clean() {
+    this.piecesCtx.clearRect(0,0,this.piecesCanvas.width,this.piecesCanvas.width)
+  }
+
   getInterval() {
-    return this.borderMapSize / (this.row - 1);
+    return this.borderMapSize / 14;
   }
 
   getBorderMapSize() {
     return this.borderMapSize;
   }
 
-  getRow() {
-    return this.row;
+
+  refresh() {
+    this._init();
   }
 
   _init() {
@@ -3911,8 +3948,8 @@ class Scene {
 
 
   _renderBoard() {
-    let interval = this.borderMapSize / (this.row - 1);
-    for (let i = 0; i < this.row; i++) {
+    let interval = this.borderMapSize / 14;
+    for (let i = 0; i < 15; i++) {
       Object(__WEBPACK_IMPORTED_MODULE_0__util__["c" /* drawLine */])(this.boardCtx, 0, i * interval, this.borderMapSize, i * interval)
       Object(__WEBPACK_IMPORTED_MODULE_0__util__["c" /* drawLine */])(this.boardCtx, i * interval, 0, i * interval, this.borderMapSize)
     }
@@ -3926,13 +3963,13 @@ class Scene {
 /* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "app/images/black.af1a93c81128349af114bd1567bf77d8.png";
+module.exports = __webpack_require__.p + "app/images/black.0e1e0d62cee5638406c0e87d1fc1faa0.png";
 
 /***/ }),
 /* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "app/images/white.b7d0737483a0e1c8d3a5a478fa20bd27.png";
+module.exports = __webpack_require__.p + "app/images/white.228b9687a318cbe8647d9a944ae43fa6.png";
 
 /***/ }),
 /* 28 */
@@ -3968,12 +4005,12 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
   _init() {
     this._initBorderArr();
     this.currentPlayerId = 1;
-    if (this.setting.mode === __WEBPACK_IMPORTED_MODULE_1__config__["b" /* mode */].personal) {
+    if (this.setting.mode === __WEBPACK_IMPORTED_MODULE_1__config__["c" /* mode */].personal) {
 
       this._initPersonal();
-    } else if (this.setting.mode === __WEBPACK_IMPORTED_MODULE_1__config__["b" /* mode */].online) {
+    } else if (this.setting.mode === __WEBPACK_IMPORTED_MODULE_1__config__["c" /* mode */].online) {
       this._initOnline();
-    } else if (this.setting.mode === __WEBPACK_IMPORTED_MODULE_1__config__["b" /* mode */].observer) {
+    } else if (this.setting.mode === __WEBPACK_IMPORTED_MODULE_1__config__["c" /* mode */].observer) {
       this._initObserver();
     } else {
       this._initFree();
@@ -4042,10 +4079,9 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
   }
 
   _initBorderArr() {
-    let row = this.sence.getRow();
-    for (let i = 0; i < row; i++) {
+    for (let i = 0; i < 15; i++) {
       this.borderArr[i] = []
-      for (let j = 0; j < row; j++) {
+      for (let j = 0; j < 15; j++) {
         this.borderArr[i][j] = 0;
       }
     }
@@ -4088,7 +4124,7 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
 
   _checkWin(x, y) {
     // 横向检查
-    for (let i = 0, count = 0; i < this.sence.row - 1; i++) {
+    for (let i = 0, count = 0; i < 14; i++) {
       if (this.borderArr[x][i] !== 0 && this.borderArr[x][i] === this.borderArr[x][i + 1]) {
         count++;
         if (count === 4) {
@@ -4099,7 +4135,7 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
       }
     }
     //纵向检查
-    for (let i = 0, count = 0; i < this.sence.row - 1; i++) {
+    for (let i = 0, count = 0; i < 14; i++) {
       if (this.borderArr[i][y] !== 0 && this.borderArr[i][y] === this.borderArr[i + 1][y]) {
         count++;
         if (count === 4) {
@@ -4112,8 +4148,8 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
 
     // 斜\检查
     var temp = x < y ? x : y;
-    for (let i = 0, x1 = x - temp, y1 = y - temp, count = 0; i < this.sence.row; i++) {
-      if (x1 + i + 1 > this.sence.row - 1 || y1 + i + 1 > this.sence.row - 1) {
+    for (let i = 0, x1 = x - temp, y1 = y - temp, count = 0; i < 15; i++) {
+      if (x1 + i + 1 > 15 - 1 || y1 + i + 1 > 15 - 1) {
         break;
       }
       if (this.borderArr[x1 + i][y1 + i] !== 0 && this.borderArr[x1 + i][y1 + i] === this.borderArr[x1 + i + 1][y1 + i + 1]) {
@@ -4127,9 +4163,9 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
     }
 
     // 斜/检查
-    var temp = x < this.sence.row - y ? x : this.sence.row - y;
-    for (let i = 0, x1 = x - temp, y1 = y + temp, count = 0; i < this.sence.row; i++) {
-      if (x1 + i + 1 > this.sence.row - 1 || y1 - i - 1 < 0) {
+    var temp = x < 15 - y ? x : 15 - y;
+    for (let i = 0, x1 = x - temp, y1 = y + temp, count = 0; i < 15; i++) {
+      if (x1 + i + 1 > 15 - 1 || y1 - i - 1 < 0) {
         break;
       }
       if (this.borderArr[x1 + i][y1 - i] !== 0 && this.borderArr[x1 + i][y1 - i] === this.borderArr[x1 + i + 1][y1 - i - 1]) {
@@ -4145,9 +4181,9 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
 
 
   render() {
-    let row = this.sence.getRow();
-    for (let i = 0; i < row; i++) {
-      for (let j = 0; j < row; j++) {
+    this.sence.clean();
+    for (let i = 0; i < 15; i++) {
+      for (let j = 0; j < 15; j++) {
         if (this.borderArr[i][j] != 0) {
           this.sence.readerPiece(i, j, this.borderArr[i][j] === 1 ? 'black' : 'white')
         }
@@ -7605,7 +7641,6 @@ class AI extends __WEBPACK_IMPORTED_MODULE_0__player__["a" /* Player */] {
     this.mark = 'ai';
     this.board = null;
     this.boardMode = [];
-
   }
 
   _initboardMode() {
@@ -7614,7 +7649,7 @@ class AI extends __WEBPACK_IMPORTED_MODULE_0__player__["a" /* Player */] {
       for (let i = 0; i < 15; i++) {
         this.boardMode[z][i] = [];
         for (let j = 0; j < 15; j++) {
-          this.boardMode[z][i][j] = '';
+          this.boardMode[z][i][j] = { maxScore: 0 };
         }
       }
     }
@@ -7629,18 +7664,28 @@ class AI extends __WEBPACK_IMPORTED_MODULE_0__player__["a" /* Player */] {
           if (this.id === this.board[i][j]) {
             this._getDirection(i, j).forEach(function(element) {
               let res = __WEBPACK_IMPORTED_MODULE_1__util__["a" /* directionFn */][element](board, i, j, this.board[i][j], __WEBPACK_IMPORTED_MODULE_1__util__["d" /* to */])
-              if (this.boardMode[0][i + res.h][j + res.v] < __WEBPACK_IMPORTED_MODULE_2__config__["d" /* modeScore */][__WEBPACK_IMPORTED_MODULE_2__config__["c" /* modeMapM */][res.count]]) {
-                this.boardMode[0][i + res.h][j + res.v] = __WEBPACK_IMPORTED_MODULE_2__config__["d" /* modeScore */][__WEBPACK_IMPORTED_MODULE_2__config__["c" /* modeMapM */][res.count]];
-                this.boardMode[2][i + res.h][j + res.v] = res.count;
+              let thereScore = this.boardMode[0][res.i][res.j];
+              thereScore[element] = __WEBPACK_IMPORTED_MODULE_2__config__["f" /* modeScore */][__WEBPACK_IMPORTED_MODULE_2__config__["d" /* modeMapM */][res.count]];
+              if (thereScore[element] > thereScore['maxScore']) {
+                thereScore['maxScore'] = thereScore[element];
               }
+              if (thereScore[__WEBPACK_IMPORTED_MODULE_2__config__["b" /* directionMap */][element]]) {
+                thereScore['maxScore'] += thereScore[__WEBPACK_IMPORTED_MODULE_2__config__["b" /* directionMap */][element]];
+              }
+              this.boardMode[2][res.i][res.j] = res.count;
             }, this);
           } else {
             this._getDirection(i, j).forEach(function(element) {
               let res = __WEBPACK_IMPORTED_MODULE_1__util__["a" /* directionFn */][element](board, i, j, this.board[i][j], __WEBPACK_IMPORTED_MODULE_1__util__["d" /* to */])
-              if (this.boardMode[1][i + res.h][j + res.v] < __WEBPACK_IMPORTED_MODULE_2__config__["d" /* modeScore */][__WEBPACK_IMPORTED_MODULE_2__config__["c" /* modeMapM */][res.count]]) {
-                this.boardMode[1][i + res.h][j + res.v] = __WEBPACK_IMPORTED_MODULE_2__config__["d" /* modeScore */][__WEBPACK_IMPORTED_MODULE_2__config__["c" /* modeMapM */][res.count]];
-                this.boardMode[3][i + res.h][j + res.v] = res.count;
+              let thereScore = this.boardMode[1][res.i][res.j];
+              thereScore[element] = __WEBPACK_IMPORTED_MODULE_2__config__["f" /* modeScore */][__WEBPACK_IMPORTED_MODULE_2__config__["e" /* modeMapR */][res.count]];
+              if (thereScore[element] > thereScore['maxScore']) {
+                thereScore['maxScore'] = thereScore[element];
               }
+              if (thereScore[__WEBPACK_IMPORTED_MODULE_2__config__["b" /* directionMap */][element]]) {
+                thereScore['maxScore'] += thereScore[__WEBPACK_IMPORTED_MODULE_2__config__["b" /* directionMap */][element]];
+              }
+              this.boardMode[3][res.i][res.j] = res.count;
             }, this);
           }
         }
@@ -7665,11 +7710,9 @@ class AI extends __WEBPACK_IMPORTED_MODULE_0__player__["a" /* Player */] {
   move(board) {
     this._updataBoardMode(board);
     let locations = this.findBest();
-    console.log(locations)
     var item = locations[Math.floor(Math.random() * locations.length)]
     this.emit('move', this.id, item.i, item.j);
     this._updataBoardMode(board)
-    console.table(arr(this.boardMode[3]))
   }
 
   findBest() {
@@ -7678,13 +7721,14 @@ class AI extends __WEBPACK_IMPORTED_MODULE_0__player__["a" /* Player */] {
     for (let z = 0; z < 2; z++) {
       for (let i = 0; i < 15; i++) {
         for (let j = 0; j < 15; j++) {
-          if (this.boardMode[z][i][j] !== 0 && this.boardMode[z][i][j] == temp) {
-            locations.push({ i, j })
+          if (this.boardMode[z][i][j]['maxScore'] !== 0 && this.boardMode[z][i][j]['maxScore'] == temp) {
+            locations.push({ i, j, temp,a:'a'})
           }
-          if (this.boardMode[z][i][j] > temp) {
-            temp = this.boardMode[z][i][j]
+
+          if (this.boardMode[z][i][j]['maxScore'] > temp) {
+            temp = this.boardMode[z][i][j]['maxScore']
             locations = []
-            locations.push({ i, j })
+            locations.push({ i, j, temp})
           }
         }
       }
@@ -7696,17 +7740,13 @@ class AI extends __WEBPACK_IMPORTED_MODULE_0__player__["a" /* Player */] {
 /* harmony export (immutable) */ __webpack_exports__["a"] = AI;
 
 
-function arr(arr) {
-  let ret = []
-  for (let i = 0; i < 15; i++) {
-    ret[i] = []
-    for (let j = 0; j < 15; j++) {
-      ret[i][j] = arr[j][i]
-    }
-  }
-  return ret;
-}
 
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "app/images/back.490b500295f50c8389f23e2b32ede263.png";
 
 /***/ })
 /******/ ]);

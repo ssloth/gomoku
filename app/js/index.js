@@ -1,13 +1,15 @@
 import { Scene } from './scene';
 import { Player } from './player';
 import { Game } from './game';
-var game = null;
-const control = document.getElementById('control');
+import back from '../images/back.png'
+document.body.style = `background-image:url('${back}')`
 
+var game = null;
+
+const control = document.getElementById('control');
 let nicknameDom = document.getElementById('nickname');
 let modeDom = document.getElementById('mode');
 let addDom = document.getElementById('add');
-
 document.querySelector('.ok').onclick = function() {
   let nickname = nicknameDom.value;
   let mode = +modeDom.options[modeDom.selectedIndex].value;

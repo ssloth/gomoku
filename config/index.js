@@ -7,7 +7,7 @@ module.exports = {
     index: path.resolve(__dirname, '../server/public/index.html'),
     assetsRoot: path.resolve(__dirname, '../server/public'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: 'http://SSnewbie.coding.me/Test',
+    assetsPublicPath: 'http://SSnewbie.coding.me/gomoku/',
   },
   dev: {
     env: require('./dev.env'),
