@@ -57,7 +57,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "http://SSnewbie.coding.me/Test/";
+/******/ 	__webpack_require__.p = "http://SSnewbie.coding.me/gomoku/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 24);
@@ -1128,7 +1128,6 @@ module.exports = function(a, b){
 /* harmony export (immutable) */ __webpack_exports__["b"] = drawImg;
 /* unused harmony export tip */
 /* harmony export (immutable) */ __webpack_exports__["d"] = to;
-/* unused harmony export assign */
 function drawLine(context, x1, y1, x2, y2, color = '#9bc0f0') {
   context.strokeStyle = color;
   context.beginPath();
@@ -1167,7 +1166,9 @@ const directionFn = {
 
 function to(board, i, j, id, { h, v }) {
   function _to(i, j, id, count) {
-    if (j === 0 || i === 0 || i === 14 || j === 14) { return count; }
+    if ((i === 0 && h === 1) || (j === 0 && v === 1) || (i === 14 && h === -1) || (j === 14 && v === -1)) {
+      return -count;
+    }
     if (board[i - h][j - v] === 0) {
       return count;
     }
@@ -1177,14 +1178,6 @@ function to(board, i, j, id, { h, v }) {
     return _to(i - h, j - v, id, count + 1);
   }
   return _to(i, j, id, 1);
-}
-
-
-function assign(oldSocre, newSocre) {
-  if (oldSocre.direction === newSocre.direction && oldSocre.score > newSocre.score) {
-    Object.assign.Object(newSocre, oldSocre);
-  }
-  return Object.assign.Object(oldSocre, newSocre)
 }
 
 
@@ -1538,30 +1531,30 @@ const modeScore = {
   rd3: 500,
   rl3: 600,
   rd4: 1000,
-  rl4: 9999,
-  rl5: 9999,
+  rl4: 1000,
+  rl5: 1000,
   md1: 110,
   ml1: 210,
   md2: 360,
   ml2: 410,
   md3: 510,
   ml3: 610,
-  md4: 5000,
-  ml4: 10000,
-  ml5: 10000,
+  ml4: 10001,
+  md4: 10001,
+  ml5: 10001,
 }
 /* harmony export (immutable) */ __webpack_exports__["f"] = modeScore;
 
 
 const directionMap = {
-  'U':'B',
-  'L':'R',
-  'LU':'RB',
-  'RU':'LB',
-  'B':'U',
-  'R':'L',
-  'RB':'LU',
-  'LB':'RU',
+  'U': 'B',
+  'L': 'R',
+  'LU': 'RB',
+  'RU': 'LB',
+  'B': 'U',
+  'R': 'L',
+  'RB': 'LU',
+  'LB': 'RU',
 }
 /* harmony export (immutable) */ __webpack_exports__["b"] = directionMap;
 
@@ -1588,23 +1581,10 @@ const modeMapM = {
   '-3': 'md3',
   '3': 'ml3',
   '-4': 'md4',
-  '4':' ml4',
+  '4': 'ml4',
   '5': 'ml5'
 }
 /* harmony export (immutable) */ __webpack_exports__["d"] = modeMapM;
-
-
-const direction = {
-  ['L']() {},
-  ['R']() {},
-  ['U']() {},
-  ['B']() {},
-  ['LU']() {},
-  ['LB']() {},
-  ['RU']() {},
-  ['RB']() {},
-}
-/* unused harmony export direction */
 
 
 const POTR = 8088;
@@ -4006,7 +3986,6 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
     this._initBorderArr();
     this.currentPlayerId = 1;
     if (this.setting.mode === __WEBPACK_IMPORTED_MODULE_1__config__["c" /* mode */].personal) {
-
       this._initPersonal();
     } else if (this.setting.mode === __WEBPACK_IMPORTED_MODULE_1__config__["c" /* mode */].online) {
       this._initOnline();
@@ -4072,9 +4051,12 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
   _initFree() {
     this.addPlayer(new __WEBPACK_IMPORTED_MODULE_5__player__["a" /* Player */]({ nickname: '黑', id: 1 }));
     this.addPlayer(new __WEBPACK_IMPORTED_MODULE_5__player__["a" /* Player */]({ nickname: '白', id: 2 }));
+    this.addPlayer(new __WEBPACK_IMPORTED_MODULE_4__ai__["a" /* AI */]({ nickname: 'AI', id: 2 }));
     this.on('move', function(currentPlayerId, x, y) {
       this._updataBoard({ currentPlayerId, x, y });
       this._toggleCurrentPlayerId();
+      this.players[2]._updataBoardMode(this.borderArr);
+      console.table(arr(this.players[2].boardMode[2]))
     })
   }
 
@@ -4194,6 +4176,17 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0_events__["EventEmitter"] {
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Game;
 
+
+function arr(arr) {
+  let ret = []
+  for (let i = 0; i < 15; i++) {
+    ret[i] = []
+    for (let j = 0; j < 15; j++) {
+      ret[i][j] = arr[j][i]
+    }
+  }
+  return ret;
+}
 
 
 /***/ }),
@@ -7666,26 +7659,30 @@ class AI extends __WEBPACK_IMPORTED_MODULE_0__player__["a" /* Player */] {
               let res = __WEBPACK_IMPORTED_MODULE_1__util__["a" /* directionFn */][element](board, i, j, this.board[i][j], __WEBPACK_IMPORTED_MODULE_1__util__["d" /* to */])
               let thereScore = this.boardMode[0][res.i][res.j];
               thereScore[element] = __WEBPACK_IMPORTED_MODULE_2__config__["f" /* modeScore */][__WEBPACK_IMPORTED_MODULE_2__config__["d" /* modeMapM */][res.count]];
-              if (thereScore[element] > thereScore['maxScore']) {
-                thereScore['maxScore'] = thereScore[element];
-              }
+              if (i === 1 && j === 1) console.log(__WEBPACK_IMPORTED_MODULE_2__config__["d" /* modeMapM */][4], 'ml4', __WEBPACK_IMPORTED_MODULE_2__config__["d" /* modeMapM */][3] == 'ml4')
               if (thereScore[__WEBPACK_IMPORTED_MODULE_2__config__["b" /* directionMap */][element]]) {
                 thereScore['maxScore'] += thereScore[__WEBPACK_IMPORTED_MODULE_2__config__["b" /* directionMap */][element]];
+                this.boardMode[2][res.i][res.j] = res.count;
               }
-              this.boardMode[2][res.i][res.j] = res.count;
+              if (thereScore[element] > thereScore['maxScore']) {
+                thereScore['maxScore'] = thereScore[element];
+                this.boardMode[2][res.i][res.j] = res.count;
+              }
             }, this);
           } else {
             this._getDirection(i, j).forEach(function(element) {
+
               let res = __WEBPACK_IMPORTED_MODULE_1__util__["a" /* directionFn */][element](board, i, j, this.board[i][j], __WEBPACK_IMPORTED_MODULE_1__util__["d" /* to */])
               let thereScore = this.boardMode[1][res.i][res.j];
               thereScore[element] = __WEBPACK_IMPORTED_MODULE_2__config__["f" /* modeScore */][__WEBPACK_IMPORTED_MODULE_2__config__["e" /* modeMapR */][res.count]];
-              if (thereScore[element] > thereScore['maxScore']) {
-                thereScore['maxScore'] = thereScore[element];
-              }
               if (thereScore[__WEBPACK_IMPORTED_MODULE_2__config__["b" /* directionMap */][element]]) {
                 thereScore['maxScore'] += thereScore[__WEBPACK_IMPORTED_MODULE_2__config__["b" /* directionMap */][element]];
+                this.boardMode[3][res.i][res.j] = res.count;
               }
-              this.boardMode[3][res.i][res.j] = res.count;
+              if (thereScore[element] > thereScore['maxScore']) {
+                this.boardMode[3][res.i][res.j] = res.count;
+                thereScore['maxScore'] = thereScore[element];
+              }
             }, this);
           }
         }
@@ -7711,8 +7708,12 @@ class AI extends __WEBPACK_IMPORTED_MODULE_0__player__["a" /* Player */] {
     this._updataBoardMode(board);
     let locations = this.findBest();
     var item = locations[Math.floor(Math.random() * locations.length)]
+    console.table(arr(this.boardMode[2]));
+    console.table(arr(this.boardMode[3]));
     this.emit('move', this.id, item.i, item.j);
     this._updataBoardMode(board)
+    console.table(arr(this.boardMode[2]));
+    console.log('end----');
   }
 
   findBest() {
@@ -7722,13 +7723,12 @@ class AI extends __WEBPACK_IMPORTED_MODULE_0__player__["a" /* Player */] {
       for (let i = 0; i < 15; i++) {
         for (let j = 0; j < 15; j++) {
           if (this.boardMode[z][i][j]['maxScore'] !== 0 && this.boardMode[z][i][j]['maxScore'] == temp) {
-            locations.push({ i, j, temp,a:'a'})
+            locations.push({ i, j, temp, a: 'a' })
           }
-
           if (this.boardMode[z][i][j]['maxScore'] > temp) {
             temp = this.boardMode[z][i][j]['maxScore']
             locations = []
-            locations.push({ i, j, temp})
+            locations.push({ i, j, temp })
           }
         }
       }
@@ -7740,6 +7740,16 @@ class AI extends __WEBPACK_IMPORTED_MODULE_0__player__["a" /* Player */] {
 /* harmony export (immutable) */ __webpack_exports__["a"] = AI;
 
 
+function arr(arr) {
+  let ret = []
+  for (let i = 0; i < 15; i++) {
+    ret[i] = []
+    for (let j = 0; j < 15; j++) {
+      ret[i][j] = arr[j][i]
+    }
+  }
+  return ret;
+}
 
 
 /***/ }),

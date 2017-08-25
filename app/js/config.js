@@ -17,7 +17,7 @@ export const modeScore = {
   md1: 110,
   ml1: 210,
   md2: 360,
-  ml2: 410,
+  ml2: 510,
   md3: 510,
   ml3: 610,
   ml4: 10001,
