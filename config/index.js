@@ -14,6 +14,6 @@ module.exports = {
     port: 8082,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
-    assetsPublicPath: '',
+    assetsPublicPath: '/',
   }
 }
