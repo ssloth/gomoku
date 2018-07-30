@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack-dev-server",
-    "server":"node server/app.js"
+    "server": "node server/app.js"
   },
   "repository": {
     "type": "git",
@@ -23,11 +23,13 @@
     "babel-loader": "^7.1.1",
     "babel-preset-es2015-loose": "^8.0.0",
     "eslint-friendly-formatter": "^3.0.0",
-    "file-loader": "^0.11.2",
-    "html-webpack-plugin": "^2.30.1",
+    "html-webpack-plugin": "^3.2.0",
     "image-loader": "0.0.1",
     "url-loader": "^0.5.9",
-    "webpack": "^3.5.4",
+    "webpack": "^4.16.3",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5",
+    "file-loader": "^1.1.11",
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {

@@ -6,5 +6,4 @@ export class Player extends EventEmitter{
     this.nickname = nickname;
     this.id = id;
   }
-
 }

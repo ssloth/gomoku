@@ -16,7 +16,6 @@ var playerCount = 0;
 var currentPlayerId = 0;
 var board = new Board();
 
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res) {
@@ -42,7 +41,6 @@ io.on('connection', function(client) {
   })
   client.on('move', function({ x, y }) {
     board.move(x, y);
-    log(currentPlayerId, 4422)
     io.sockets.emit('move', { currentPlayerId, x, y });
     toggleCurrentPlayerId();
     io.sockets.emit('currentPlayerId', currentPlayerId);

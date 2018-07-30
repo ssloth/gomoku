@@ -8,15 +8,18 @@ export class Game extends EventEmitter {
   constructor({ nickname, sence, setting }) {
     super();
     this.players = [];
+    this.borderArr = [];
     this.sence = sence;
     this.localPlayer = { nickname, id: null };
     this.currentPlayerId = 0;
-    this.borderArr = [];
     this.winFlag = false;
     this.setting = setting;
     this._init();
   }
 
+  /**
+   * 初始化地图和游戏模式
+   */
   _init() {
     this._initBorderArr();
     this.currentPlayerId = 1;
@@ -31,12 +34,15 @@ export class Game extends EventEmitter {
     }
   }
 
-
+  /**
+   * 单机模式
+   */
   _initPersonal() {
     let me = this;
     me.addPlayer(new Player({ nickname: '黑', id: 1 }));
     me.addPlayer(new AI({ nickname: '白', id: 2 }));
 
+    
     me.players[1].on('move', function(currentPlayerId, x, y) {
       me._updataBoard({ currentPlayerId, x, y });
       me._toggleCurrentPlayerId();
@@ -86,7 +92,7 @@ export class Game extends EventEmitter {
   _initFree() {
     this.addPlayer(new Player({ nickname: '黑', id: 1 }));
     this.addPlayer(new Player({ nickname: '白', id: 2 }));
-    this.addPlayer(new AI({ nickname: 'AI', id: 2 }));
+    // this.addPlayer(new AI({ nickname: 'AI', id: 2 }));
     this.on('move', function(currentPlayerId, x, y) {
       this._updataBoard({ currentPlayerId, x, y });
       this._toggleCurrentPlayerId();
@@ -114,12 +120,7 @@ export class Game extends EventEmitter {
     })
   }
 
-  addPlayer(player) {
-    this.players.push(player);
-    if (this.players.length === 2) {
-      this._initEventer();
-    }
-  }
+
 
   _toggleCurrentPlayerId() {
     if (this.winFlag) {
@@ -151,7 +152,7 @@ export class Game extends EventEmitter {
         count = 0;
       }
     }
-    //纵向检查
+    // 纵向检查
     for (let i = 0, count = 0; i < 14; i++) {
       if (this.borderArr[i][y] !== 0 && this.borderArr[i][y] === this.borderArr[i + 1][y]) {
         count++;
@@ -196,7 +197,6 @@ export class Game extends EventEmitter {
     }
   }
 
-
   render() {
     this.sence.clean();
     for (let i = 0; i < 15; i++) {
@@ -208,8 +208,19 @@ export class Game extends EventEmitter {
     }
   }
 
+  addPlayer(player) {
+    this.players.push(player);
+    if (this.players.length === 2) {
+      this._initEventer();
+    }
+  }
+
 }
 
+/**
+ * 将数组转置，不改变原数组
+ * @param {Array} arr 
+ */
 function arr(arr) {
   let ret = []
   for (let i = 0; i < 15; i++) {
